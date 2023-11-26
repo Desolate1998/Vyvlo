@@ -1,0 +1,20 @@
+.sidebar {
+  margin-top: 1%;
+  transition: left 0.3s ease-in, width 0.3s ease-out;
+  height: 90%;
+  overflow: hidden;
+  border-radius: 10px;
+  margin-left: 10px;
+  width: 100% ;
+  left:0;
+}
+
+.sidebar.closed {
+  left: -300px;
+}
+
+.menuHover {
+  padding: 10px;
+  color: rgb(23, 22, 22) !important;
+}
+

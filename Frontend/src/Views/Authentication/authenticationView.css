@@ -1,0 +1,51 @@
+.view-body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(to top left, #FF6B6B, #6B5B95);
+}
+
+.account-continer {
+    display: flex;
+    flex-direction: column;
+    width: 500px;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.425);
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+    backdrop-filter: blur(10px);
+    /* Adjust the blur value for the frosted glass effect */
+}
+
+.input {
+    width: 100%;
+    margin: 10px;
+}
+
+.label-container,
+.button-container {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+}
+
+.login-button {
+    margin-right: 10px !important;
+}
+
+.register-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.register-container span {
+    margin: 10px;
+}
+
+.input-container {
+    width: 100%;
+}

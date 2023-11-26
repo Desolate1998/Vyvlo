@@ -1,0 +1,29 @@
+body {
+  padding: 0;
+  margin: 0;
+  background-color: rgb(239, 237, 237);
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border-radius: 100px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #f0f0f0;
+}
+
+.app-container {
+  display: grid;
+  grid-template-columns: 12% 1fr; 
+  gap: 10px; 
+  padding: 20px;
+  background-color: rgb(239, 237, 237);
+  transition: 0.3s ease-in;
+  max-height: 80vh;
+  overflow: hidden;
+}
