@@ -1,5 +1,4 @@
-﻿
-using Application.Common.Interfaces.Persistence;
+﻿using Application.Common.Repositories;
 using Domain.Database;
 using ErrorOr;
 using Infrastructure.Database.Context;
@@ -7,27 +6,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence;
 
-internal class UserRepository : IUserRepository
+internal class UserRepository(DataContext database) : IUserRepository
 {
-    private readonly DataContext _database;
+    async Task<bool> IUserRepository.CheckIfEmailIsInUseAsync(string email) => await database.Users.Where(x => x.Email == email).AnyAsync();
 
-    public UserRepository(DataContext database)
+    async Task<User?> IUserRepository.GetUserByEmailAsync(string email) => await database.Users.FirstOrDefaultAsync(x => x.Email == email);
+
+    async Task IUserRepository.RegisterUserAsync(User user)
     {
-        _database = database;
-    }
-
-    async Task<User?> IUserRepository.GetUserByEmailAsync(string email) => await _database.Users.FirstOrDefaultAsync(x => x.Email == email);
-
-
-    async Task<ErrorOr<bool>> IUserRepository.RegisterUserAsync(User user)
-    {
-        var userExits = await _database.Users.Where(x => x.Email == user.Email).AnyAsync();
-        if (userExits)
-        {
-            return Error.Conflict("User", "User already exists");
-        }
-        _database.Users.Add(user);
-        await _database.SaveChangesAsync();
-        return true;
+        database.Users.Add(user);
+        await database.SaveChangesAsync();
     }
 }

@@ -19,7 +19,7 @@ public class AuthenticationController(ILogger<AuthenticationController> logger, 
 
         RegisterCommand command = new(Mapper.Map<RegisterCommandRequestDTO>(request));
         var results = await mediator.Send(command);
-        return results.IsError ? BadRequest(results.Errors) : Ok(results.Value);
+        return Ok(results);
     }
 
     [HttpPost("Login")]
@@ -30,6 +30,6 @@ public class AuthenticationController(ILogger<AuthenticationController> logger, 
 
         LoginQuery command = new(Mapper.Map<LoginQueryRequestDTO>(request));
         var results = await mediator.Send(command);
-        return results.IsError ? BadRequest(results.Errors) : Ok(results.Value);
+        return Ok(results);
     }
 }

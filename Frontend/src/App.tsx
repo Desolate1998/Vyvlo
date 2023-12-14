@@ -1,18 +1,31 @@
 import { MenuProvider } from './Infrastructure/Contexts/MenuContext';
 import {
   FluentProvider,
-  webLightTheme} from "@fluentui/react-components";
-import { AuthenticationView } from './Views/Authentication/AuthenticationView';
+  teamsDarkTheme,
+  teamsLightTheme,
+  webDarkTheme,
+  webLightTheme
+} from "@fluentui/react-components";
+import { initializeIcons } from '@fluentui/font-icons-mdl2';
+import { ReactNotifications } from 'react-notifications-component'
+import { AppRouter } from './AppRouter';
+import 'react-notifications-component/dist/theme.css'
+import { AuthProvider } from './Infrastructure/Contexts/AuthContext';
+import { useTheme } from './Infrastructure/Contexts/ThemeContext';
 
+initializeIcons();
 const App = () => {
+  const {useDarkTheme} = useTheme()
   return (
-    <>
-      <FluentProvider theme={webLightTheme}>
+    <AuthProvider >
+      <ReactNotifications />
+      <FluentProvider theme={ useDarkTheme? webDarkTheme: webLightTheme}>
         <MenuProvider>
-          <AuthenticationView/>
+          <AppRouter />
         </MenuProvider>
       </FluentProvider>
-    </>
+    </AuthProvider>
+
   );
 };
 

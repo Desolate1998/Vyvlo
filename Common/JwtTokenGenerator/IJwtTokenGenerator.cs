@@ -1,4 +1,4 @@
-﻿namespace Application.Common.Interfaces.Authentication;
+﻿namespace Common.JwtTokenGenerator;
 
 public interface IJwtTokenGenerator
 {

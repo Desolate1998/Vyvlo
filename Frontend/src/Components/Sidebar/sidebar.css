@@ -1,0 +1,13 @@
+.sidebar {
+    transition: left 0.3s ease-in, width 0.3s ease-out;
+    height: 90%;
+    overflow: hidden;
+    width: 100% ;
+    left:0;
+    margin-top: 5px !important;
+  }
+  
+  .sidebar.closed {
+    display: none;
+  }
+  

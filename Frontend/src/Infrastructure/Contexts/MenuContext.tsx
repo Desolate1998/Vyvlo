@@ -1,40 +1,43 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode } from "react";
 
-// Define types for the context
 interface MenuContextProps {
   isMenuOpen: boolean;
   changeMenu: () => void;
+  page: string;
+  changePage: ( pageName: string) => void;
 }
 
-// Create a context
 const MenuContext = createContext<MenuContextProps | undefined>(undefined);
 
-// Create a provider component
 interface MenuProviderProps {
   children: ReactNode;
 }
 
 export const MenuProvider: React.FC<MenuProviderProps> = ({ children }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(true);
+  const [page, setPageName] = useState("");
 
-  const changeMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
+  const changeMenu = () => setIsMenuOpen(!isMenuOpen);
+
+  const changePage = ( pageName: string) => {
+    setPageName(pageName);
   };
 
 
 
   return (
-    <MenuContext.Provider value={{ isMenuOpen, changeMenu}}>
+    <MenuContext.Provider
+      value={{ isMenuOpen, changeMenu, page, changePage}}
+    >
       {children}
     </MenuContext.Provider>
   );
 };
 
-// Create a custom hook to use the context
 export const useMenu = (): MenuContextProps => {
   const context = useContext(MenuContext);
   if (!context) {
-    throw new Error('useMenu must be used within a MenuProvider');
+    throw new Error("useMenu must be used within a MenuProvider");
   }
   return context;
 };

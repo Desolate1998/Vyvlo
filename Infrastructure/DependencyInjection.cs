@@ -1,5 +1,5 @@
-﻿using Application.Common.Interfaces.Authentication;
-using Application.Common.Interfaces.Persistence;
+﻿using Application.Common.Repositories;
+using Common.JwtTokenGenerator;
 using Infrastructure.Core.Authentication;
 using Infrastructure.Database.Context;
 using Infrastructure.Persistence;
@@ -36,7 +36,6 @@ public static class DependencyInjection
             ?? throw new InvalidDataException("ASPNETCORE_ENVIRONMENT is not set")))
         );
 
-
         services.AddAuthentication(defaultScheme:JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options=> options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
         {
             ValidateIssuer = true,
@@ -47,7 +46,6 @@ public static class DependencyInjection
             ValidAudience = jwtSettings.Audience,
             IssuerSigningKey =new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Secret))
         });
-        
 
         services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddScoped<IUserRepository, UserRepository>();

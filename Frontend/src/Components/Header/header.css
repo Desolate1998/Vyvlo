@@ -1,0 +1,10 @@
+.top-bar {
+    display: flex;
+    height: 100%;
+    padding-left: 10px;
+    flex-direction: row;
+    align-items: center;
+    flex-flow: row;
+    gap: 20px 5px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}

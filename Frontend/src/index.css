@@ -1,29 +1,54 @@
 body {
   padding: 0;
   margin: 0;
-  background-color: rgb(239, 237, 237);
+  overflow-x: hidden;
+  height: 100vh;
+  max-height: 100vh;
+  width: 100%;
+  max-width: 100%;
+  overflow-y: hidden;
 }
 
-::-webkit-scrollbar {
-  width: 12px;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: transparent;
-  border-radius: 100px;
-}
-
-::-webkit-scrollbar-track {
-  background-color: #f0f0f0;
-}
-
-.app-container {
+.container {
   display: grid;
-  grid-template-columns: 12% 1fr; 
-  gap: 10px; 
-  padding: 20px;
-  background-color: rgb(239, 237, 237);
-  transition: 0.3s ease-in;
-  max-height: 80vh;
-  overflow: hidden;
+  grid-template-columns: 0.4fr 3fr 0.1fr;
+  grid-template-rows: 0.4fr 1.6fr 1fr;
+  gap: 0px 0px;
+  grid-auto-flow: dense;
+  grid-template-areas:
+    "header header header"
+    "MainContent-sidebar main-content main-content";
+  height: 100vh;
 }
+.container-close{
+  display: grid;
+  grid-template-columns: 0.4fr 3fr 0.1fr;
+  grid-template-rows: 0fr 1fr 0fr;
+  gap: 0px 0px;
+  grid-auto-flow: dense;
+  grid-template-areas:
+    "header header header"
+    "main-content main-content main-content";
+  height: 100vh;
+}
+
+.MainContent-sidebar {
+  grid-area: MainContent-sidebar;
+  height: calc(100vh -7vh);
+}
+
+.header {
+  grid-area: header;
+  height: 7vh;
+}
+
+.main-content {
+  grid-area: main-content;
+  margin-top: 10px;
+  padding: 10px;
+  overflow-y: scroll;
+  max-height: calc(100vh - 10vh);
+}
+
+  
+  

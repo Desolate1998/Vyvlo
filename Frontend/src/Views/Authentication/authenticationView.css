@@ -49,3 +49,7 @@
 .input-container {
     width: 100%;
 }
+
+.login-progress{
+    margin-top: 10px;
+}
