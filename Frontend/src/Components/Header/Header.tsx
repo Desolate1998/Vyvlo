@@ -9,11 +9,8 @@ import {
     Text,
     Switch,
     Divider,
-    Select,
     Dropdown,
-    Option,
-    Field,
-    Input,
+    Option
 } from "@fluentui/react-components";
 import { HiMenuAlt1, HiMenuAlt4 } from "react-icons/hi";
 import "./header.css";
@@ -22,52 +19,59 @@ import { useAuth } from "../../Infrastructure/Contexts/AuthContext";
 import { useTheme } from "../../Infrastructure/Contexts/ThemeContext";
 import { LightTheme } from "../../Infrastructure/Themes/lightTheme";
 import { DarkTheme } from "../../Infrastructure/Themes/darkTheme";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Icon } from "@fluentui/react/lib/Icon";
 import CreateStore from "../CreateStore/CreateStore";
+import { storeApi } from "../../Infrastructure/API/Requests/Store/storeApi";
+import { addNotification } from "../../Infrastructure/helpers/notificationHelper";
+import { KeyValuePair } from "../../Domain/Types/Common/keyValuePair";
+import { useStore } from "../../Infrastructure/Contexts/StoreContext";
 
 export default function Header() {
-    const { changeMenu, isMenuOpen, page } = useMenu();
+    const  {setCurrentStoreId,currentStoreId, stores,getCurrentStoreName} = useStore();
+
+    const { changeMenu, isMenuOpen } = useMenu();
     const { user } = useAuth();
     const { swapTheme, useDarkTheme } = useTheme();
-    const [stores, setStores] = useState<string[]>(['Fluffy bunny ']);
+   
+    const {logout} = useAuth()
+
     const [open, setOpen] = useState<boolean>(false);
-    
+
+    useEffect(() => {
+
+    }, [])
 
     const toggleSidebar = () => {
         changeMenu();
     };
 
+    const changeMainStore = (key: number) => {
+        if (currentStoreId != null || currentStoreId != key) {
+            setCurrentStoreId(key);
+        }
+    }
     return (
         <div className="top-bar" style={{ backgroundColor: `${useDarkTheme ? DarkTheme.paper.backgroundColor : LightTheme.paper.backgroundColor}` }}>
-            <CreateStore isOpen={open} onClose={() => {setOpen(false)}} />
+            <CreateStore isOpen={open} onClose={() => { setOpen(false) }} />
             <Button icon={isMenuOpen ? <HiMenuAlt1 /> : <HiMenuAlt4 />} appearance="primary" onClick={toggleSidebar}></Button>
-            <Text as="h1" size={500} color={useDarkTheme ? "white" : "black"}><span style={{ color: useDarkTheme ? "white" : "black" }}>{page}</span></Text>
-            <Dropdown placeholder="Select A Store">
-                <Option key={"Create-New-Store"} value={'Create-New-Store'} text={''} onClick={()=>setOpen(true)}>
+            <Dropdown placeholder="Select A Store"  value={getCurrentStoreName()}>
+                <Option key={"Create-New-Store"} value={'Create-New-Store'} text={''} onClick={() => setOpen(true)}>
                     <Text style={{ display: 'flex', justifyContent: 'center', alignContent: 'center' }}> <Icon iconName="CircleAddition" style={{ marginRight: 10 }} />   Create New Store</Text>
                 </Option>
                 <Divider />
-                {stores.map((option) => (<Option key={option} value={option}>{option}</Option>))}
+                {stores.map((option) => (<Option onClick={() => { changeMainStore(option.key) }} key={option.key} value={option.value}>{option.value}</Option>))}
             </Dropdown>
             <div style={{ marginLeft: "auto", paddingRight: "10px" }}>
-                <Text className="email-address" style={{ marginRight: "10px", color: useDarkTheme ? "white" : "black" }}>{user?.email}</Text>
+                <Text className="email-address" style={{ marginRight: "10px", color: useDarkTheme ? "white" : "black" }}>{user?.firstName + ' ' +user?.lastName}</Text>
                 <Popover>
                     <PopoverTrigger disableButtonEnhancement><Avatar aria-label={user?.email} /></PopoverTrigger>
-          
                     <PopoverSurface style={{ marginRight: "100px" }}>
-                    <Field
-                label="Example field"
-                validationState="success"
-                validationMessage="This is a success message."
-            >
-                <Input />
-            </Field>
                         <MenuList>
                             <MenuItem>Profile</MenuItem>
                             <MenuItem>Settings</MenuItem>
                             <MenuItem>Help</MenuItem>
-                            <MenuItem>Logout</MenuItem>
+                            <MenuItem onClick={logout}>Logout</MenuItem>
                             <Divider />
                             <MenuItem>
                                 <Switch

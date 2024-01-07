@@ -18,7 +18,6 @@ public class User
         Salt = salt;
         UpdatedAt = DateTimeProvider.ApplicationDate;
         CreatedAt = DateTimeProvider.ApplicationDate;
-           
     }
 
     public User()
@@ -26,7 +25,7 @@ public class User
             
     }
 
-    public long UserID { get; private set; }
+    public long Id { get; private set; }
     public string Email { get; private set; }
     public string PasswordHash { get; private set; }
     public string FirstName { get; private set; }
@@ -34,6 +33,7 @@ public class User
     public string Salt { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime UpdatedAt { get; private set; }
+    public virtual ICollection<Store> Stores { get; set; }
 
     public static User CreateUser(string email, string password, string firstName, string lastName)
     {
@@ -55,10 +55,7 @@ public class User
 
     static string HashPassword(string password, byte[] salt)
     {
-        using (Rfc2898DeriveBytes pbkdf2 = new Rfc2898DeriveBytes(password, salt, 10000, HashAlgorithmName.SHA256))
-        {
-            byte[] hash = pbkdf2.GetBytes(32); // 32 bytes for a 256-bit key
-            return Convert.ToBase64String(hash);
-        }
+        using Rfc2898DeriveBytes pbkdf2 = new(password, salt, 10_000, HashAlgorithmName.SHA256);
+        return Convert.ToBase64String(pbkdf2.GetBytes(32));
     }
 }

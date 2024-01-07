@@ -11,7 +11,7 @@ const Sidebar: React.FC = () => {
       <Card className={`sidebar ${isMenuOpen ? "open" : "closed"}`}>
           {
             routes.map((item) => {
-              return <MenuSection options={item} />;
+              return <MenuSection options={item} key={item.name}/>;
             })}
       </Card>
     );

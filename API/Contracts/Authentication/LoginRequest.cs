@@ -1,14 +1,15 @@
 ﻿namespace Contracts.Authentication;
 
-public record LoginRequest(
-
+public class LoginRequest
+{
     /// <summary>
     /// User email address
     /// </summary>
-    string Email,
+    public string Email { get; set; }
 
     /// <summary>
     /// User password
     /// </summary>
-    string Password
-);
+    public string Password { get; set; }
+}
+

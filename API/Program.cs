@@ -10,7 +10,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddSwaggerGen();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
-
+builder.Services.AddHttpContextAccessor();
 var app = builder.Build();
 app.UseCors("CorsPolicy");
 // Configure the HTTP request pipeline.

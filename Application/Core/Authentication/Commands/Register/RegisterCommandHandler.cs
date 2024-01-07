@@ -7,9 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.Core.Authentication.Commands.Register;
 
-public class RegisterCommandHandler(IUserRepository userRepository,
-                                    ILogger<RegisterCommandHandler> logger,
-                                    IJwtTokenGenerator jwtTokenGenerator) : IRequestHandler<RegisterCommand, ErrorOr<bool>>
+public class RegisterCommandHandler(IUserRepository userRepository) : IRequestHandler<RegisterCommand, ErrorOr<bool>>
 {
     public async Task<ErrorOr<bool>> Handle(RegisterCommand request, CancellationToken cancellationToken)
     {

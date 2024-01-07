@@ -6,15 +6,8 @@ namespace api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class HealthCheckController : Controller
+    public class HealthCheckController(ILogger<HealthCheckController> logger) : Controller
     {
-        private readonly ILogger<HealthCheckController> logger;
-
-        public HealthCheckController(ILogger<HealthCheckController> logger)
-        {
-            this.logger = logger;
-        }
-
         [HttpGet("Echo")]
         public IActionResult Echo()
         {

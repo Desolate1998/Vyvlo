@@ -1,4 +1,4 @@
-import { Theme } from "../../Domain/Types/Common/theme";
+import { Theme } from "../../Domain/Types/theme";
 
 export const DarkTheme: Theme = {
     backgroundColor: '#30343f',

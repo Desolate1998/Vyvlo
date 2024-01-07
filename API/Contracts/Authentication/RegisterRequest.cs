@@ -1,23 +1,24 @@
 ﻿namespace Contracts.Authentication;
 
-public record RegisterRequest (
+public class RegisterRequest
+{
     /// <summary>
     /// The email address the user would Like to use
     /// </summary>
-    string Email,
+    public string Email { get; set; }
 
     /// <summary>
     /// The password the user would like to use
     /// </summary>
-    string Password,
+    public string Password { get; set; } 
 
     /// <summary>
     /// The password the user would like to use
     /// </summary>
-    string FirstName,
+    public string FirstName { get; set; }
 
     /// <summary>
     /// The password the user would like to use
     /// </summary>
-    string LastName
-);
+    public string LastName { get; set; }
+}

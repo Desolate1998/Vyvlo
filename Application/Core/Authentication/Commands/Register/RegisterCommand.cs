@@ -1,5 +1,4 @@
-﻿using Domain.Database;
-using ErrorOr;
+﻿using ErrorOr;
 using MediatR;
 
 namespace Application.Core.Authentication.Commands.Register;

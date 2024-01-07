@@ -11,7 +11,7 @@ public static class Mapper
 {
     public static TDestination Map<TDestination>(object source) where TDestination : class
     {
-        TDestination instance = Activator.CreateInstance(typeof(TDestination)) as TDestination ?? throw new NullReferenceException("Invalid source object to map");
+        TDestination instance = Activator.CreateInstance(typeof(TDestination)) as TDestination ?? throw new InvalidCastException("Could not create an instance of the destination object");
         ICollection<PropertyInfo> instanceProperties = instance.GetType().GetProperties();
         foreach (PropertyInfo item in source.GetType().GetProperties())
         {

@@ -17,7 +17,7 @@ public class LoginQueryHandler(IUserRepository userRepository, IJwtTokenGenerato
 
         if(user.ValidLoginPassword(request.loginDetails.Password) == false) return Error.Unauthorized("Login", "Invalid login details");
 
-        var token = jwtTokenGenerator.GenerateToken(user.UserID, user.FirstName, user.LastName);
+        var token = jwtTokenGenerator.GenerateToken(user.Id, user.FirstName, user.LastName);
 
         return new LoginQueryResponse(token, user.FirstName, user.LastName, user.Email);
     }

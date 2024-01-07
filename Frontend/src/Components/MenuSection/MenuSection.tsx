@@ -14,7 +14,6 @@ import { Menu as MenuType } from "../../Domain/Types/Common/menu";
 interface IProps {
   options: MenuType;
 }
-
 export const MenuSection: React.FC<IProps> = ({ options }) => {
   const { changePage } = useMenu();
   const { useDarkTheme } = useTheme();
@@ -26,7 +25,7 @@ export const MenuSection: React.FC<IProps> = ({ options }) => {
           {options.subMenu.map((item) => {
             if (item.subMenu == null || item.subMenu.length == 0) {
               return (
-                <MenuItem  onClick={() => changePage(item.name)}>
+                <MenuItem key={item.url}  onClick={() => changePage(item.name)}>
                   <Link
                     style={{
                       color: useDarkTheme ? "white" : "black",

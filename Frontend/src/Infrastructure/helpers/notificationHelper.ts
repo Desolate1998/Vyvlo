@@ -1,10 +1,11 @@
 import { Store } from 'react-notifications-component';
 
-export function addNotification(title: string, message: string) {
+export function addNotification(title: string, message: string, type: 'success' | 'danger' | 'info' | 'default' | 'warning' | 'primary' | 'secondary' | 'dark' | 'light' = 'success') {
     Store.addNotification({
         title,
         message,
-        type: 'danger',
+        //@ts-ignore
+        type: type,
         insert: "top",
         container: "top-right",
         animationIn: ["animate__animated", "animate__fadeIn"],

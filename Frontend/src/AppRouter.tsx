@@ -9,16 +9,20 @@ import Sidebar from './Components/Sidebar/Sidebar';
 import { DarkTheme } from './Infrastructure/Themes/darkTheme';
 import { LightTheme } from './Infrastructure/Themes/lightTheme';
 import { generateRoutes, routes } from './Infrastructure/helpers/Routes';
+import { useStore } from './Infrastructure/Contexts/StoreContext';
+import { FirstStoreCreation } from './Views/FirstStoreCreation/FirstStoreCreation';
 
 export const AppRouter = () => {
     const { isMenuOpen } = useMenu();
     const { useDarkTheme } = useTheme();
-
     const { isAuthenticated, tryAutoLogin } = useAuth();
+    const { currentStoreId, getStores } = useStore();
+
     useEffect(() => {
         if (!isAuthenticated) {
             tryAutoLogin()
         }
+        getStores()
     }, [])
 
     if (!isAuthenticated) {
@@ -29,6 +33,13 @@ export const AppRouter = () => {
                 </Routes>
             </Router>
         );
+    } else if (currentStoreId == null) {
+        return (
+            <Router>
+                <Routes>
+                    <Route path="/" Component={FirstStoreCreation} />
+                </Routes>
+            </Router>)
     } else {
         return (
             <Router>
