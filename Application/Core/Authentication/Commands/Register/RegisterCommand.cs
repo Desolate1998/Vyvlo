@@ -4,5 +4,5 @@ using MediatR;
 namespace Application.Core.Authentication.Commands.Register;
 
 public record RegisterCommand(
-    RegisterCommandRequestDTO user
+    RegisterCommandRequestDTO Data
     ) : IRequest<ErrorOr<bool>>;

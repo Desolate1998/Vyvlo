@@ -11,6 +11,8 @@ namespace Domain.Database
         public int Id { get; set; }
         public string Tag { get; set; }
         public string Description { get; set; }
+        public long StoreId { get; set; }   
+        public virtual Store Store { get; set; }    
         public ICollection<Product> Products { get; set; }
     }
 }

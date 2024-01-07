@@ -8,4 +8,5 @@ public interface IStoreRepository
     public Task<Store> CreateStoreAsync (Store store);
     public Task<List<KeyValuePair<long,string>>> GetUserStoresAsync(long userId);
     public Task<bool> CheckStoreExistsAsync(string storeName);
+    public Task<bool> UserAllowedToEditStore(long userId, long storeId);
 }

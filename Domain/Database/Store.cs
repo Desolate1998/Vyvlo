@@ -38,6 +38,7 @@ public class Store
     public virtual StoreStatus StoreStatus { get; set; }
     public virtual ICollection<Product> Products { get; set; } 
 
+    public virtual ICollection<ProductMetaTag> ProductMetaTags { get; set; }
     public static Store CreateStore(long storeOwnerId,
                                     string storeName,
                                     string storeDescription,

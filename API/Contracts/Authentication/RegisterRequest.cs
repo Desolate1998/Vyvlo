@@ -1,5 +1,8 @@
 ﻿namespace Contracts.Authentication;
 
+/// <summary>
+/// The request to register a new user
+/// </summary>
 public class RegisterRequest
 {
     /// <summary>

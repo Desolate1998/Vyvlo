@@ -9,11 +9,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+
 
 namespace API.Controllers;
 
-[Route("[controller]")]
+[Route("api/[controller]")]
 [ApiController]
 public class StoreController(IMediator mediator, IHttpContextAccessor httpContextAccessor, ILogger<StoreController> logger) : ControllerBase
 {
@@ -28,8 +28,7 @@ public class StoreController(IMediator mediator, IHttpContextAccessor httpContex
         {
             Name = store.Name,
             Description = store.Description,
-            OwnerId = long.Parse(userId)
-        });
+        }, long.Parse(userId));
 
         return Ok(await mediator.Send(command));
     }

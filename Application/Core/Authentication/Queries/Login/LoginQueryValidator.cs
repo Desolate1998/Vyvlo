@@ -11,8 +11,8 @@ namespace Application.Core.Authentication.Queries.Login
     {
         public LoginQueryValidator()
         {
-            RuleFor(x => x.loginDetails.Email).NotEmpty().WithMessage("Email cannot be empty");
-            RuleFor(x => x.loginDetails.Password).NotEmpty().WithMessage("Password cannot be empty");
+            RuleFor(x => x.Data.Email).NotEmpty().WithMessage("Email cannot be empty");
+            RuleFor(x => x.Data.Password).NotEmpty().WithMessage("Password cannot be empty");
         }
     }
 }

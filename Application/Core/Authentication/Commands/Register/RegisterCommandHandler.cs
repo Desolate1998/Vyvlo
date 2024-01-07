@@ -11,16 +11,16 @@ public class RegisterCommandHandler(IUserRepository userRepository) : IRequestHa
 {
     public async Task<ErrorOr<bool>> Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
-        var userExistsCheck = await userRepository.GetUserByEmailAsync(request.user.Email);
+        var userExistsCheck = await userRepository.GetUserByEmailAsync(request.Data.Email);
         if (userExistsCheck is not null)
         {
             return Error.Conflict("User", "User already exists");
         }
 
-        var user = User.CreateUser(request.user.Email,
-                                   request.user.Password,
-                                   request.user.FirstName,
-                                   request.user.FirstName);
+        var user = User.CreateUser(request.Data.Email,
+                                   request.Data.Password,
+                                   request.Data.FirstName,
+                                   request.Data.FirstName);
 
         await userRepository.RegisterUserAsync(user);
         return true;

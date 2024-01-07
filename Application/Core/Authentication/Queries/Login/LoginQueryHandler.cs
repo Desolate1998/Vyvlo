@@ -11,11 +11,11 @@ public class LoginQueryHandler(IUserRepository userRepository, IJwtTokenGenerato
 {
     async Task<ErrorOr<LoginQueryResponse>> IRequestHandler<LoginQuery, ErrorOr<LoginQueryResponse>>.Handle(LoginQuery request, CancellationToken cancellationToken)
     {
-        User user = await userRepository.GetUserByEmailAsync(request.loginDetails.Email);
+        User user = await userRepository.GetUserByEmailAsync(request.Data.Email);
         
         if (user is null) return Error.Unauthorized("Login", "Invalid login details");
 
-        if(user.ValidLoginPassword(request.loginDetails.Password) == false) return Error.Unauthorized("Login", "Invalid login details");
+        if(user.ValidLoginPassword(request.Data.Password) == false) return Error.Unauthorized("Login", "Invalid login details");
 
         var token = jwtTokenGenerator.GenerateToken(user.Id, user.FirstName, user.LastName);
 

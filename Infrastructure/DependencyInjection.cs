@@ -50,6 +50,8 @@ public static class DependencyInjection
         services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IStoreRepository, StoreRepository>();
+        services.AddScoped<IProductCategoriesRepository, ProductCategoriesRepository>();
+
         return services;
     }
 }

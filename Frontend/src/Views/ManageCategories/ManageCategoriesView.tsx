@@ -6,7 +6,6 @@ export const ManageCategoriesView = () => {
     <Card>
       <Field label="Search">
         <div>
-
         <Input appearance="outline" style={{width:'90%' ,marginRight:'1%'}}/>
         <Button appearance='primary'>Add New Category</Button>
         </div>

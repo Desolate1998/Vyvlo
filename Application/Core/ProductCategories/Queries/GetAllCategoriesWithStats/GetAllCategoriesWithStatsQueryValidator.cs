@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace Application.Core.ProductCategories.Queries.GetAllCategories;
 
-public class GetAllCategoriesQueryValidator:AbstractValidator<GetAllCategoriesQuery>
+public class GetAllCategoriesWithStatsQueryValidator:AbstractValidator<GetAllCategoriesWithStatsQuery>
 {
-    public GetAllCategoriesQueryValidator()
+    public GetAllCategoriesWithStatsQueryValidator()
     {
         RuleFor(x => x.UserId).NotEmpty().WithMessage("User id cannot be empty");
     }

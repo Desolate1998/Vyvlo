@@ -8,4 +8,14 @@ public class ProductCategory
     public long StoreId { get; set; }   
     public virtual Store Store { get; set; }
     public virtual ICollection<Product> Products { get; set; }
+
+    public static ProductCategory CreateProductCategory(string name, string description, long storeId)
+    {
+        return new()
+        {
+            Name = name,
+            Description = description,
+            StoreId = storeId
+        };
+    }
 }

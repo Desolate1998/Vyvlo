@@ -9,5 +9,5 @@ using System.Threading.Tasks;
 namespace Application.Core.Authentication.Queries.Login;
 
 public record LoginQuery(
-    LoginQueryRequestDTO loginDetails
+    LoginQueryRequestDTO Data
    ): IRequest<ErrorOr<LoginQueryResponse>>;

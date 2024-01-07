@@ -22,7 +22,7 @@ internal class StoreRepository(DataContext database) : IStoreRepository
 
     async Task<Store?> IStoreRepository.GetStoreByNameAsync(string storeName)
     {
-        return await database.Stores.Where(x => x.Name.ToUpper() == storeName.ToUpper())
+        return await database.Stores.Where(x => x.Name.ToUpper() == storeName.ToUpper()).AsNoTracking()
                                     .FirstOrDefaultAsync();
     }
 
@@ -30,7 +30,14 @@ internal class StoreRepository(DataContext database) : IStoreRepository
     {
         return await database.Stores.Where(x => x.OwnerId == userId)
                                     .OrderByDescending(x => x.Name)
+                                    .AsNoTracking()
                                     .Select(x => new KeyValuePair<long, string>(x.Id, x.Name))
                                     .ToListAsync();
+    }
+
+    async Task<bool> IStoreRepository.UserAllowedToEditStore(long userId, long storeId)
+    {
+        return await database.Stores.Where(x => x.Id == storeId && x.OwnerId == userId)
+                                    .AnyAsync();
     }
 }

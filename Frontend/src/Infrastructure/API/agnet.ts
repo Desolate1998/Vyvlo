@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-axios.defaults.baseURL = "https://localhost:7261/";
+axios.defaults.baseURL = "https://localhost:7261/api/";
 const responseBody = <T>(response: AxiosResponse<T>) => response.data;
 
 axios.interceptors.request.use(config => {

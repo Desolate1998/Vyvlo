@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers;
 
 [ApiController]
-[Route("auth")]
+[Route("api/auth")]
 public class AuthenticationController(ILogger<AuthenticationController> logger, ISender mediator) : ControllerBase
 {
     [HttpPost("Register")]

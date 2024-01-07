@@ -10,7 +10,7 @@ internal class UserRepository(DataContext database) : IUserRepository
 {
     async Task<bool> IUserRepository.CheckIfEmailIsInUseAsync(string email) => await database.Users.Where(x => x.Email == email).AnyAsync();
 
-    async Task<User?> IUserRepository.GetUserByEmailAsync(string email) => await database.Users.FirstOrDefaultAsync(x => x.Email == email);
+    async Task<User?> IUserRepository.GetUserByEmailAsync(string email) => await database.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Email == email);
 
     async Task IUserRepository.RegisterUserAsync(User user)
     {

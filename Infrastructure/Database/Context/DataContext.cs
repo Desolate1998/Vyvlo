@@ -173,6 +173,15 @@ public class DataContext(DbContextOptions options) : DbContext(options)
             entity.Property(p => p.Id)
                   .HasColumnName("ProductMetaTagId");
 
+            entity.Property(p => p.StoreId)
+                  .HasColumnName("StoreId");
+            
+            entity.HasOne(p => p.Store)
+                  .WithMany(p => p.ProductMetaTags)
+                  .HasForeignKey(p => p.StoreId)
+                  .HasConstraintName("fk_Store_ProductMetaTag")
+                  .OnDelete(DeleteBehavior.NoAction);
+
             entity.Property(p => p.Tag)
                   .HasColumnName("Tag");
 

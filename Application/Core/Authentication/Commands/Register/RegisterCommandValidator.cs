@@ -11,9 +11,9 @@ public class RegisterCommandValidator: AbstractValidator<RegisterCommand>
 {
     public RegisterCommandValidator()
     {
-        RuleFor(x => x.user.Email).NotEmpty().WithMessage("Email cannot be empty");
-        RuleFor(x => x.user.Password).NotEmpty().WithMessage("Password cannot be empty");
-        RuleFor(x => x.user.FirstName).NotEmpty().WithMessage("First name cannot be empty");
-        RuleFor(x => x.user.LastName).NotEmpty().WithMessage("Last name cannot be empty");
+        RuleFor(x => x.Data.Email).NotEmpty().WithMessage("Email cannot be empty");
+        RuleFor(x => x.Data.Password).NotEmpty().WithMessage("Password cannot be empty");
+        RuleFor(x => x.Data.FirstName).NotEmpty().WithMessage("First name cannot be empty");
+        RuleFor(x => x.Data.LastName).NotEmpty().WithMessage("Last name cannot be empty");
     }
 }

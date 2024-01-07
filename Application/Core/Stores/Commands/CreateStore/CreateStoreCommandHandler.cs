@@ -9,11 +9,11 @@ public class CreateStoreCommandHandler(IStoreRepository storeRepository) : IRequ
 {
     async Task<ErrorOr<Domain.Database.Store>> IRequestHandler<CreateStoreCommand, ErrorOr<Domain.Database.Store>>.Handle(CreateStoreCommand request, CancellationToken cancellationToken)
     {
-        if (await storeRepository.CheckStoreExistsAsync(request.store.Name))
+        if (await storeRepository.CheckStoreExistsAsync(request.Data.Name))
         {
             return Error.Conflict("storeName", "Store already exists");
         }
-        var store  = Domain.Database.Store.CreateStore(request.store.OwnerId, request.store.Name, request.store.Description);
+        var store  = Domain.Database.Store.CreateStore(request.UserId, request.Data.Name, request.Data.Description);
         return await storeRepository.CreateStoreAsync(store);
     }
 }
