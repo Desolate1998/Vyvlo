@@ -1,8 +1,8 @@
-import { loginRequest } from "../../../../Domain/Contracts/Authentication/Login/loginRequest"
-import { loginResponse } from "../../../../Domain/Contracts/Authentication/Login/loginResponse"
-import { registerRequest } from "../../../../Domain/Contracts/Authentication/Register/registerRequest"
-import { registerResponse } from "../../../../Domain/Contracts/Authentication/Register/registerResponse"
-import { ErrorOr } from "../../../../Domain/Contracts/ErrorOr"
+import { loginRequest } from "../../../Types/loginRequest"
+import { loginResponse } from "../../../Types/loginResponse"
+import { registerRequest } from "../../../Types/registerRequest"
+import { registerResponse } from "../../../Types/registerResponse"
+import { ErrorOr } from "../../../Types/ErrorOr"
 import { requests } from "../../agnet"
 
 export const authenticationApi = {

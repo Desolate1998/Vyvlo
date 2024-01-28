@@ -1,6 +1,4 @@
-﻿using Domain.Database;
-
-namespace Application.Common.Repositories;
+﻿namespace Domain.Repository_Interfaces;
 
 public interface IStoreRepository
 {
@@ -8,5 +6,5 @@ public interface IStoreRepository
     public Task<Store> CreateStoreAsync (Store store);
     public Task<List<KeyValuePair<long,string>>> GetUserStoresAsync(long userId);
     public Task<bool> CheckStoreExistsAsync(string storeName);
-    public Task<bool> UserAllowedToEditStore(long userId, long storeId);
+    public Task<bool> UserAllowedToEditStoreAsync(long userId, long storeId);
 }

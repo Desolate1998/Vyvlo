@@ -1,9 +1,6 @@
-﻿using Application.Common.Repositories;
-using Common.JwtTokenGenerator;
-using Domain.Database;
-using ErrorOr;
-using MediatR;
-using System;
+﻿using Common.JwtTokenGenerator;
+using Domain.Repository_Interfaces;
+using Infrastructure.Core.PasswordHelper;
 
 namespace Application.Core.Authentication.Queries.Login;
 
@@ -12,10 +9,13 @@ public class LoginQueryHandler(IUserRepository userRepository, IJwtTokenGenerato
     async Task<ErrorOr<LoginQueryResponse>> IRequestHandler<LoginQuery, ErrorOr<LoginQueryResponse>>.Handle(LoginQuery request, CancellationToken cancellationToken)
     {
         User user = await userRepository.GetUserByEmailAsync(request.Data.Email);
-        
+
         if (user is null) return Error.Unauthorized("Login", "Invalid login details");
 
-        if(user.ValidLoginPassword(request.Data.Password) == false) return Error.Unauthorized("Login", "Invalid login details");
+        if (PasswordHelper.ValidLoginPassword(request.Data.Password, user.Salt, user.PasswordHash) == false)
+        {
+            return Error.Unauthorized("Login", "Invalid login details");
+        }
 
         var token = jwtTokenGenerator.GenerateToken(user.Id, user.FirstName, user.LastName);
 

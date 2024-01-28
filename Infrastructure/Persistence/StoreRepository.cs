@@ -1,5 +1,5 @@
-﻿using Application.Common.Repositories;
-using Domain.Database;
+﻿using Domain.Database;
+using Domain.Repository_Interfaces;
 using Infrastructure.Database.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -33,9 +33,10 @@ internal class StoreRepository(DataContext database) : IStoreRepository
                                     .AsNoTracking()
                                     .Select(x => new KeyValuePair<long, string>(x.Id, x.Name))
                                     .ToListAsync();
-    }
 
-    async Task<bool> IStoreRepository.UserAllowedToEditStore(long userId, long storeId)
+    } 
+
+    async Task<bool> IStoreRepository.UserAllowedToEditStoreAsync(long userId, long storeId)
     {
         return await database.Stores.Where(x => x.Id == storeId && x.OwnerId == userId)
                                     .AnyAsync();

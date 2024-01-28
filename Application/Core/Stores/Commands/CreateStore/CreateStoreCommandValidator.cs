@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-
-namespace Application.Core.Store.Commands.CreateStore;
+﻿namespace Application.Core.Stores.Commands.CreateStore;
 
 public class CreateStoreCommandValidator:AbstractValidator<CreateStoreCommand>
 {

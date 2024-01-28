@@ -1,6 +1,4 @@
-﻿using Domain.Database;
-
-namespace Application.Common.Repositories;
+﻿namespace Domain.Repository_Interfaces;
 
 public interface IUserRepository
 {

@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.ObjectPool;
 
-namespace api.Controllers
+namespace API.Controllers
 {
     [ApiController]
     [Route("[controller]")]

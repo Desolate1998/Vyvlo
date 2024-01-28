@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
-import { KeyValuePair } from "../../Domain/Types/Common/keyValuePair";
+import { KeyValuePair } from "../Types/keyValuePair";
 import { storeApi } from "../API/Requests/Store/storeApi";
 interface StoreContextProps {
     currentStoreId: number | null;
@@ -11,13 +11,15 @@ interface StoreContextProps {
 
 const StoreContext = createContext<StoreContextProps | undefined>(undefined);
 
-interface MenuProviderProps {
+interface StoreProviderProps {
     children: ReactNode;
 }
 
-export const StoreProvider: React.FC<MenuProviderProps> = ({ children }) => {
+export const StoreProvider: React.FC<StoreProviderProps> = ({ children }) => {
     const [currentStoreId, setCurrentStoreId] = useState<number | null>(null);
     const [stores, setStores] = useState<KeyValuePair<number, string>[]>([]);
+    const [listeners,setListener] = useState<(()=>void)[]>([])
+
     const getStores = async () => {
         var res = await storeApi.getUserOwnedStoreNames();
         if (res.isError) {
@@ -28,6 +30,13 @@ export const StoreProvider: React.FC<MenuProviderProps> = ({ children }) => {
             } 
         }
     }
+
+    const regesterStoreChangeEvent = (callback:()=>void)=>setListener([...listeners,callback])
+
+    const deRegisterStoreChangeEvent = (id:string)=>setListener(listeners.filter(x=>x.name!==id))
+    
+    const notifyListeners = () => listeners.forEach(x=>x())
+    
 
     const getCurrentStoreName = (): string => {
         if (currentStoreId != null) {

@@ -1,6 +1,7 @@
 import { MenuProvider } from './Infrastructure/Contexts/MenuContext';
 import {
   FluentProvider,
+  Toaster,
   webDarkTheme,
   webLightTheme
 } from "@fluentui/react-components";
@@ -11,12 +12,14 @@ import 'react-notifications-component/dist/theme.css'
 import { AuthProvider } from './Infrastructure/Contexts/AuthContext';
 import { useTheme } from './Infrastructure/Contexts/ThemeContext';
 import { StoreProvider } from './Infrastructure/Contexts/StoreContext';
+import { ToasterProvider } from './Infrastructure/Contexts/ToasterContext';
 
 initializeIcons();
 const App = () => {
   const { useDarkTheme } = useTheme()
   return (
     <AuthProvider >
+      <ToasterProvider>
       <ReactNotifications />
       <FluentProvider theme={useDarkTheme ? webDarkTheme : webLightTheme}>
         <StoreProvider>
@@ -25,6 +28,7 @@ const App = () => {
           </MenuProvider>
         </StoreProvider>
       </FluentProvider>
+      </ToasterProvider>
     </AuthProvider>
   );
 };

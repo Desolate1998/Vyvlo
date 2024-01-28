@@ -1,16 +1,19 @@
-﻿using Domain.Database;
+﻿using Domain.Common.ProductCategories;
+using Domain.Database;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Database.Context;
 
 public class DataContext(DbContextOptions options) : DbContext(options)
 {
-    public virtual DbSet<User> Users { get; set; }
-    public virtual DbSet<Store> Stores { get; set; }
-    public virtual DbSet<StoreStatus> StoreStatuses { get; set; }
-    public virtual DbSet<Product> Products { get; set; }
-    public virtual DbSet<ProductMetaTag> ProductMetaTags { get; set; }
-    public virtual DbSet<ProductCategory> ProductCategories { get; set; }
+    public virtual DbSet<User> Users { get; init; }
+    public virtual DbSet<Store> Stores { get; init; }
+    public virtual DbSet<StoreStatus> StoreStatuses { get; init; }
+    public virtual DbSet<Product> Products { get; init; }
+    public virtual DbSet<ProductMetaTag> ProductMetaTags { get; init; }
+    public virtual DbSet<ProductCategory> ProductCategories { get; init; }
+    public virtual DbSet<ProductCategoryLink> ProductCategoryLinks { get; init; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<User>(entity =>
@@ -51,7 +54,7 @@ public class DataContext(DbContextOptions options) : DbContext(options)
             entity.HasMany(p => p.Stores)
                   .WithOne(p => p.Owner)
                   .HasConstraintName("fk_Store_StoreOwner");
-                  
+
         });
 
         modelBuilder.Entity<Store>(entity =>
@@ -105,12 +108,12 @@ public class DataContext(DbContextOptions options) : DbContext(options)
             entity.ToTable("StoreStatuses");
 
             entity.HasKey(p => p.StoreStatusCode)
-                  .HasName("pk_StoreStatus_Code");  
+                  .HasName("pk_StoreStatus_Code");
 
             entity.Property(p => p.StoreStatusCode)
                   .HasMaxLength(255)
                   .HasColumnName("StoreStatusCode");
-            
+
             entity.Property(p => p.Description)
                   .HasMaxLength(255)
                   .HasColumnName("StoreStatusDescription");
@@ -120,7 +123,7 @@ public class DataContext(DbContextOptions options) : DbContext(options)
                   .HasConstraintName("fk_StoreStatus_Store");
         });
 
-        modelBuilder.Entity<Product>(entity=>
+        modelBuilder.Entity<Product>(entity =>
         {
             entity.ToTable("Products");
 
@@ -143,7 +146,7 @@ public class DataContext(DbContextOptions options) : DbContext(options)
 
             entity.Property(p => p.Price)
                   .HasColumnName("Price")
-                  .HasPrecision(18,2);
+                  .HasPrecision(18, 2);
 
 
             entity.Property(p => p.Stock)
@@ -155,15 +158,16 @@ public class DataContext(DbContextOptions options) : DbContext(options)
                   .HasConstraintName("fk_Store_Product")
                   .OnDelete(DeleteBehavior.NoAction);
 
-            entity.HasMany(p => p.ProductCategory)
-                   .WithMany(p => p.Products);
+            entity.HasMany(p => p.ProductCategoryLinks)
+                .WithOne(pc => pc.Product)
+                .HasForeignKey(pc => pc.ProductId);
 
             entity.HasMany(p => p.ProductMetaTags)
                   .WithMany(p => p.Products);
 
-        }); 
+        });
 
-        modelBuilder.Entity<ProductMetaTag>(entity=>
+        modelBuilder.Entity<ProductMetaTag>(entity =>
         {
             entity.ToTable("ProductMetaTags");
 
@@ -175,7 +179,7 @@ public class DataContext(DbContextOptions options) : DbContext(options)
 
             entity.Property(p => p.StoreId)
                   .HasColumnName("StoreId");
-            
+
             entity.HasOne(p => p.Store)
                   .WithMany(p => p.ProductMetaTags)
                   .HasForeignKey(p => p.StoreId)
@@ -184,9 +188,6 @@ public class DataContext(DbContextOptions options) : DbContext(options)
 
             entity.Property(p => p.Tag)
                   .HasColumnName("Tag");
-
-            entity.Property(p => p.Description)
-                  .HasColumnName("Description");
         });
 
         modelBuilder.Entity<ProductCategory>(entity =>
@@ -205,8 +206,56 @@ public class DataContext(DbContextOptions options) : DbContext(options)
             entity.Property(p => p.Description)
                   .HasColumnName("Description");
 
-            entity.HasMany(p => p.Products)
-                  .WithMany(p => p.ProductCategory);
+            entity.HasMany(pc => pc.ProductCategoryLinks)
+                .WithOne(link => link.Category)
+                .HasForeignKey(link => link.CategoryId);
+
+        });
+
+        modelBuilder.Entity<ProductCategoryLink>(entity =>
+        {
+            entity.ToTable("ProductCategoryLinks");
+
+            entity.HasKey(p => new { p.ProductId, p.CategoryId })
+                  .HasName("pk_ProductCategoryLink_Id");
+
+
+            entity.Property(p => p.ProductId)
+                  .HasColumnName("ProductId");
+
+            entity.Property(p => p.CategoryId)
+                  .HasColumnName("CategoryId");
+
+            entity.HasOne(pc => pc.Product)
+                .WithMany(p => p.ProductCategoryLinks)
+                .HasForeignKey(pc => pc.ProductId);
+
+            entity.HasOne(pc => pc.Category)
+                .WithMany(c => c.ProductCategoryLinks)
+                .HasForeignKey(pc => pc.CategoryId);
+        });
+
+        modelBuilder.Entity<ProductImage>(entity =>
+        {
+            entity.ToTable("ProductImages");
+
+            entity.HasKey(p => p.Id)
+                  .HasName("pk_ProductImage_Id");
+
+            entity.Property(p => p.Id)
+                  .HasColumnName("Id");
+
+            entity.Property(p => p.ProductId)
+                  .HasColumnName("ProductId");
+
+            entity.Property(p => p.ImageUrl)
+                  .HasColumnName("ImageUrl");
+
+            entity.HasOne(p => p.Product)
+                  .WithMany(p => p.ProductImages)
+                  .HasForeignKey(p => p.ProductId)
+                  .HasConstraintName("fk_Product_ProductImage")
+                  .OnDelete(DeleteBehavior.NoAction);
         });
     }
 }

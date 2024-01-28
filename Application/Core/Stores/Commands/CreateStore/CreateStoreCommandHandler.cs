@@ -1,9 +1,6 @@
-﻿using Application.Common.Repositories;
-using ErrorOr;
-using MediatR;
+﻿using Domain.Repository_Interfaces;
 
-
-namespace Application.Core.Store.Commands.CreateStore;
+namespace Application.Core.Stores.Commands.CreateStore;
 
 public class CreateStoreCommandHandler(IStoreRepository storeRepository) : IRequestHandler<CreateStoreCommand, ErrorOr<Domain.Database.Store>>
 {

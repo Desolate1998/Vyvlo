@@ -1,8 +1,8 @@
-﻿using Application.Core.Authentication.Commands.Register;
+﻿using API.Contracts.Authentication;
+using Application.Core.Authentication.Commands.Register;
 using Application.Core.Authentication.Queries.Login;
 using Common.DateTimeProvider;
 using Common.Mapper;
-using Contracts.Authentication;
 using ErrorOr;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

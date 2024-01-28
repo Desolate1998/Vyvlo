@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import { LightTheme } from "../Themes/lightTheme";
-import { Theme } from "../../Domain/Types/Common/theme";
+import { Theme } from "../Types/theme";
 import { DarkTheme } from "../Themes/darkTheme";
 
 

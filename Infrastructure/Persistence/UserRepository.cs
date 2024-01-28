@@ -1,5 +1,5 @@
-﻿using Application.Common.Repositories;
-using Domain.Database;
+﻿using Domain.Database;
+using Domain.Repository_Interfaces;
 using ErrorOr;
 using Infrastructure.Database.Context;
 using Microsoft.EntityFrameworkCore;

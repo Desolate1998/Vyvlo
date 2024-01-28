@@ -7,10 +7,9 @@ import {
 } from '@fluentui/react-components';
 import { FormikErrors, useFormik } from 'formik';
 import { Registerform } from './Registerform';
-import { loginRequest } from '../../Domain/Contracts/Authentication/Login/loginRequest';
+import { loginRequest } from '../../Infrastructure/Types/loginRequest';
 import { useState } from 'react';
 import { authenticationApi } from '../../Infrastructure/API/Requests/Authentication/authenticationApi';
-import { addNotification } from '../../Infrastructure/helpers/notificationHelper';
 import { useAuth } from '../../Infrastructure/Contexts/AuthContext';
 
 export const AuthenticationView = () => {
@@ -30,12 +29,10 @@ export const AuthenticationView = () => {
             try {
                 var response = await authenticationApi.login(data);
                 if (response.isError) {
-                    addNotification(response.firstError.description, 'danger')
                 } else {
                     login(response.value)
                 }
             } catch (error) {
-                addNotification('Internal Server Error', 'danger')
             } finally {
                 setLoading(false)
             }

@@ -1,4 +1,4 @@
-﻿namespace Contracts.Authentication;
+﻿namespace API.Contracts.Authentication;
 
 /// <summary>
 /// The request to register a new user

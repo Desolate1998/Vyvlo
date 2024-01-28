@@ -1,7 +1,4 @@
-﻿using Application.Core.Store.Queries.GetAllUserStore;
-using FluentValidation;
-
-namespace Application.Core.Store.Queries.GetAllUserStores;
+﻿namespace Application.Core.Stores.Queries.GetUserOwnedStoreNames;
 
 public class GetUserOwnedStoreNamesQueryValidator:AbstractValidator<GetUserOwnedStoreNamesQuery>
 {

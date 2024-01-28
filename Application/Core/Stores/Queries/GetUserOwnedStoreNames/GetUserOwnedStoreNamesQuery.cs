@@ -1,8 +1,4 @@
-﻿using Application.Core.Store.Queries.GetAllUserStores;
-using ErrorOr;
-using MediatR;
-
-namespace Application.Core.Store.Queries.GetAllUserStore;
+﻿namespace Application.Core.Stores.Queries.GetUserOwnedStoreNames;
 
 public record GetUserOwnedStoreNamesQuery(
     long UserId

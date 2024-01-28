@@ -1,7 +1,7 @@
 import { Icon } from "@fluentui/react/lib/Icon";
 import { Route } from "react-router-dom";
 import Dashboard from "../../Views/Dashboard/Dashboard";
-import { Menu } from "../../Domain/Types/Common/menu";
+import { Menu } from "../Types/menu";
 import { ManageStoreView } from "../../Views/ManageStore/ManageStoreView";
 import { ManageProductView } from "../../Views/ManageProducts/ManageProductView";
 import { ManageCategoriesView } from "../../Views/ManageCategories/ManageCategoriesView";

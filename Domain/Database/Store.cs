@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Domain.Database;
 
-public class Store
+public sealed class Store
 {
     private Store(long storeOwnerId,
                   string storeName,
@@ -34,11 +34,11 @@ public class Store
     public string? Email { get; private set; }
     public string Description { get; private set; }
     public DateTime CreatedAt { get; private set; }
-    public  virtual User Owner { get; set; }
-    public virtual StoreStatus StoreStatus { get; set; }
-    public virtual ICollection<Product> Products { get; set; } 
+    public User Owner { get; set; }
+    public StoreStatus StoreStatus { get; set; }
+    public ICollection<Product> Products { get; set; } 
 
-    public virtual ICollection<ProductMetaTag> ProductMetaTags { get; set; }
+    public IEnumerable<ProductMetaTag> ProductMetaTags { get; set; }
     public static Store CreateStore(long storeOwnerId,
                                     string storeName,
                                     string storeDescription,
@@ -46,6 +46,6 @@ public class Store
                                     string? storePhoneNumber = null,
                                     string? storeEmail =null)
     {
-        return new(storeOwnerId, storeName, storeAddress, storePhoneNumber, storeEmail, storeDescription);
+        return new Store(storeOwnerId, storeName, storeAddress, storePhoneNumber, storeEmail, storeDescription);
     }
 }

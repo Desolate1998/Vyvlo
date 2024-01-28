@@ -46,6 +46,9 @@ namespace Infrastructure.Migrations
                         .HasColumnType("decimal(18,2)")
                         .HasColumnName("Price");
 
+                    b.Property<long?>("ProductCategoryId")
+                        .HasColumnType("bigint");
+
                     b.Property<int>("Stock")
                         .HasColumnType("int")
                         .HasColumnName("Stock");
@@ -56,6 +59,8 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_Product_Id");
+
+                    b.HasIndex("ProductCategoryId");
 
                     b.HasIndex("StoreId");
 
@@ -90,6 +95,49 @@ namespace Infrastructure.Migrations
                     b.ToTable("ProductCategories", (string)null);
                 });
 
+            modelBuilder.Entity("Domain.Database.ProductCategoryLink", b =>
+                {
+                    b.Property<long>("ProductId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("ProductId");
+
+                    b.Property<long>("CategoryId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("CategoryId");
+
+                    b.HasKey("ProductId", "CategoryId")
+                        .HasName("pk_ProductCategoryLink_Id");
+
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("ProductCategoryLinks", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.Database.ProductImage", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("Id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ImageUrl");
+
+                    b.Property<long>("ProductId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("ProductId");
+
+                    b.HasKey("Id")
+                        .HasName("pk_ProductImage_Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductImages", (string)null);
+                });
+
             modelBuilder.Entity("Domain.Database.ProductMetaTag", b =>
                 {
                     b.Property<int>("Id")
@@ -98,10 +146,6 @@ namespace Infrastructure.Migrations
                         .HasColumnName("ProductMetaTagId");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("Description");
 
                     b.Property<long>("StoreId")
                         .HasColumnType("bigint")
@@ -239,21 +283,6 @@ namespace Infrastructure.Migrations
                     b.ToTable("Users", (string)null);
                 });
 
-            modelBuilder.Entity("ProductProductCategory", b =>
-                {
-                    b.Property<long>("ProductCategoryId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("ProductsId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("ProductCategoryId", "ProductsId");
-
-                    b.HasIndex("ProductsId");
-
-                    b.ToTable("ProductProductCategory");
-                });
-
             modelBuilder.Entity("ProductProductMetaTag", b =>
                 {
                     b.Property<int>("ProductMetaTagsId")
@@ -271,6 +300,10 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Database.Product", b =>
                 {
+                    b.HasOne("Domain.Database.ProductCategory", null)
+                        .WithMany("Products")
+                        .HasForeignKey("ProductCategoryId");
+
                     b.HasOne("Domain.Database.Store", "Store")
                         .WithMany("Products")
                         .HasForeignKey("StoreId")
@@ -290,6 +323,37 @@ namespace Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Store");
+                });
+
+            modelBuilder.Entity("Domain.Database.ProductCategoryLink", b =>
+                {
+                    b.HasOne("Domain.Database.ProductCategory", "Category")
+                        .WithMany("ProductCategoryLinks")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Database.Product", "Product")
+                        .WithMany("ProductCategoryLinks")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("Domain.Database.ProductImage", b =>
+                {
+                    b.HasOne("Domain.Database.Product", "Product")
+                        .WithMany("ProductImages")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired()
+                        .HasConstraintName("fk_Product_ProductImage");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Domain.Database.ProductMetaTag", b =>
@@ -323,21 +387,6 @@ namespace Infrastructure.Migrations
                     b.Navigation("StoreStatus");
                 });
 
-            modelBuilder.Entity("ProductProductCategory", b =>
-                {
-                    b.HasOne("Domain.Database.ProductCategory", null)
-                        .WithMany()
-                        .HasForeignKey("ProductCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Database.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("ProductProductMetaTag", b =>
                 {
                     b.HasOne("Domain.Database.ProductMetaTag", null)
@@ -351,6 +400,20 @@ namespace Infrastructure.Migrations
                         .HasForeignKey("ProductsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Database.Product", b =>
+                {
+                    b.Navigation("ProductCategoryLinks");
+
+                    b.Navigation("ProductImages");
+                });
+
+            modelBuilder.Entity("Domain.Database.ProductCategory", b =>
+                {
+                    b.Navigation("ProductCategoryLinks");
+
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("Domain.Database.Store", b =>

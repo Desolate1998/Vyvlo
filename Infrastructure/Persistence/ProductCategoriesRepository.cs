@@ -1,9 +1,8 @@
-﻿using Application.Common.Repositories;
-using Domain.Common.ProductCategories;
+﻿using Domain.Common.ProductCategories;
 using Domain.Database;
+using Domain.Repository_Interfaces;
 using Infrastructure.Database.Context;
 using Microsoft.EntityFrameworkCore;
-using System.Text.RegularExpressions;
 
 namespace Infrastructure.Persistence;
 
@@ -21,35 +20,47 @@ internal class ProductCategoriesRepository(DataContext context) : IProductCatego
         await context.SaveChangesAsync();
     }
 
-    async Task<List<GetAllCategoriesWithStats>> IProductCategoriesRepository.GetProductCategoriesAsync(long userId)
+    async Task<List<CategoriesWithStats>> IProductCategoriesRepository.GetProductCategoriesWithStatsAsync(long storeId)
     {
-        return await (from productCategories in context.ProductCategories join
-                stores in context.Stores on productCategories.StoreId equals stores.Id 
-                where stores.OwnerId == userId join ProductCategory in context.ProductCategories 
-                on productCategories.Id equals ProductCategory.Id
-                join products in context.Products on ProductCategory.Id equals products.Id
-                group products by new { productCategories.Id, productCategories.Name,productCategories.Description} into grouped
-                select new GetAllCategoriesWithStats
-                {
-                    ProductCategoryId = grouped.Key.Id,
-                    Name= grouped.Key.Name,
-                    TotalStock= grouped.Sum(p => p.Stock),
-                    Description= grouped.Key.Description,
-                    TotalProducts = grouped.Count()
-                }).AsNoTracking().ToListAsync();
+        return await (from category in context.ProductCategories
+                      join categoryLink in context.ProductCategoryLinks on category.Id equals categoryLink.CategoryId into categoryLinks
+                      from categoryLink in categoryLinks.DefaultIfEmpty()
+                      join product in context.Products on categoryLink.ProductId equals product.Id into products
+                      from product in products.DefaultIfEmpty()
+                      where category.StoreId == storeId
+                      group new { category, categoryLink, product } by new { category.Id, category.Name, category.Description } into groupedData
+                      select new CategoriesWithStats
+                      {
+                          ProductCategoryId = groupedData.Key.Id,
+                          Name = groupedData.Key.Name,
+                          Description = groupedData.Key.Description,
+                          TotalProducts = groupedData.Count(x=>x.product.Name !=null),
+                          TotalStock = groupedData.Sum(x => x.product.Stock)
+                      }).ToListAsync();
 
-                //SQL for incase the above query does not work as expected 
-                //SELECT
-                //pc.Id,
-                //pc.Name,
-                //pc.Description,
-                //SUM(p.Stock) AS TotalStock,
-                //COUNT(p.Id) AS TotalProducts
-                //FROM ProductCategories pc
-                //INNER JOIN Stores s ON s.id = pc.StoreId AND s.StoreOwnerId = 1
-                //INNER JOIN ProductProductCategory pcc ON pcc.ProductCategoryId = pc.Id
-                //INNER JOIN Products p ON p.Id = pcc.ProductsId
-                //GROUP BY pc.Id, pc.Name, pc.Description;
+    }
 
+    async Task IProductCategoriesRepository.DeleteCategoryAsync(ProductCategory productCategory)
+    {
+        await context.ProductCategoryLinks.Where(x => x.CategoryId == productCategory.Id).ExecuteDeleteAsync();
+        context.ProductCategories.Remove(productCategory);
+        await context.SaveChangesAsync();
+    }
+
+    async Task<ProductCategory> IProductCategoriesRepository.UpdateCategoryAsync(ProductCategory productCategory)
+    {
+        context.ProductCategories.Update(productCategory);
+        await context.SaveChangesAsync();
+        return productCategory;
+    }
+
+   async Task<ProductCategory?> IProductCategoriesRepository.GetCategoryAsync(long productCategoryId)
+   {
+        return await context.ProductCategories.FirstOrDefaultAsync(x => x.Id == productCategoryId);    
+   }
+
+    async Task<List<ProductCategory>> IProductCategoriesRepository.GetProductCategoriesAsync(long storeId)
+    {
+        return await context.ProductCategories.Where(x => x.StoreId == storeId).ToListAsync();
     }
 }

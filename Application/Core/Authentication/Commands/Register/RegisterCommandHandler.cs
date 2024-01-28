@@ -1,8 +1,5 @@
-﻿using Application.Common.Repositories;
-using Common.JwtTokenGenerator;
-using Domain.Database;
-using ErrorOr;
-using MediatR;
+﻿using Common.JwtTokenGenerator;
+using Domain.Repository_Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace Application.Core.Authentication.Commands.Register;

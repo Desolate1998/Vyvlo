@@ -9,6 +9,8 @@ public class ProductCategory
     public virtual Store Store { get; set; }
     public virtual ICollection<Product> Products { get; set; }
 
+    public virtual ICollection<ProductCategoryLink> ProductCategoryLinks { get; set; }
+    
     public static ProductCategory CreateProductCategory(string name, string description, long storeId)
     {
         return new()
@@ -17,5 +19,11 @@ public class ProductCategory
             Description = description,
             StoreId = storeId
         };
+    }
+
+    public void Update(string name, string description)
+    {
+        Name = name;
+        Description = description;
     }
 }

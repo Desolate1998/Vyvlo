@@ -21,20 +21,15 @@ import { LightTheme } from "../../Infrastructure/Themes/lightTheme";
 import { DarkTheme } from "../../Infrastructure/Themes/darkTheme";
 import { useEffect, useState } from "react";
 import { Icon } from "@fluentui/react/lib/Icon";
-import CreateStore from "../CreateStore/CreateStore";
-import { storeApi } from "../../Infrastructure/API/Requests/Store/storeApi";
-import { addNotification } from "../../Infrastructure/helpers/notificationHelper";
-import { KeyValuePair } from "../../Domain/Types/Common/keyValuePair";
+import CreateStore from "./CreateStore/CreateStore";
 import { useStore } from "../../Infrastructure/Contexts/StoreContext";
 
 export default function Header() {
-    const  {setCurrentStoreId,currentStoreId, stores,getCurrentStoreName} = useStore();
-
+    const { setCurrentStoreId, currentStoreId, stores, getCurrentStoreName } = useStore();
     const { changeMenu, isMenuOpen } = useMenu();
     const { user } = useAuth();
     const { swapTheme, useDarkTheme } = useTheme();
-   
-    const {logout} = useAuth()
+    const { logout } = useAuth()
 
     const [open, setOpen] = useState<boolean>(false);
 
@@ -55,7 +50,7 @@ export default function Header() {
         <div className="top-bar" style={{ backgroundColor: `${useDarkTheme ? DarkTheme.paper.backgroundColor : LightTheme.paper.backgroundColor}` }}>
             <CreateStore isOpen={open} onClose={() => { setOpen(false) }} />
             <Button icon={isMenuOpen ? <HiMenuAlt1 /> : <HiMenuAlt4 />} appearance="primary" onClick={toggleSidebar}></Button>
-            <Dropdown placeholder="Select A Store"  value={getCurrentStoreName()}>
+            <Dropdown placeholder="Select A Store" value={getCurrentStoreName()}>
                 <Option key={"Create-New-Store"} value={'Create-New-Store'} text={''} onClick={() => setOpen(true)}>
                     <Text style={{ display: 'flex', justifyContent: 'center', alignContent: 'center' }}> <Icon iconName="CircleAddition" style={{ marginRight: 10 }} />   Create New Store</Text>
                 </Option>
@@ -63,7 +58,7 @@ export default function Header() {
                 {stores.map((option) => (<Option onClick={() => { changeMainStore(option.key) }} key={option.key} value={option.value}>{option.value}</Option>))}
             </Dropdown>
             <div style={{ marginLeft: "auto", paddingRight: "10px" }}>
-                <Text className="email-address" style={{ marginRight: "10px", color: useDarkTheme ? "white" : "black" }}>{user?.firstName + ' ' +user?.lastName}</Text>
+                <Text className="email-address" style={{ marginRight: "10px", color: useDarkTheme ? "white" : "black" }}>{user?.firstName + ' ' + user?.lastName}</Text>
                 <Popover>
                     <PopoverTrigger disableButtonEnhancement><Avatar aria-label={user?.email} /></PopoverTrigger>
                     <PopoverSurface style={{ marginRight: "100px" }}>

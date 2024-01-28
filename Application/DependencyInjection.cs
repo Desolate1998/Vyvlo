@@ -1,7 +1,5 @@
 ﻿using Application.Common.Behaviors;
 using Application.Core.Authentication.Commands.Register;
-using FluentValidation;
-using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
 

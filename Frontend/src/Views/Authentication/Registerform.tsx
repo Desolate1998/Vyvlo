@@ -1,9 +1,8 @@
 import { DialogTrigger, Button, DialogSurface, DialogBody, DialogTitle, DialogContent, Input, DialogActions, Field, ProgressBar } from '@fluentui/react-components'
-import { registerRequest } from '../../Domain/Contracts/Authentication/Register/registerRequest';
+import { registerRequest } from '../../Infrastructure/Types/registerRequest';
 import { FormikErrors, useFormik } from 'formik';
 import { authenticationApi } from '../../Infrastructure/API/Requests/Authentication/authenticationApi';
 import { useState } from 'react';
-import { addNotification } from '../../Infrastructure/helpers/notificationHelper';
 
 export const Registerform = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -23,12 +22,9 @@ export const Registerform = () => {
         setLoading(true)
         var respponse = await authenticationApi.register(data)
         if (respponse.isError) {
-          addNotification(respponse.firstError.description, 'danger')
         } else {
-          addNotification('Account created successfully', 'success')
         }
       } catch (error) {
-        addNotification('Internal Server Error', 'danger')
       } finally {
         setLoading(false)
       }

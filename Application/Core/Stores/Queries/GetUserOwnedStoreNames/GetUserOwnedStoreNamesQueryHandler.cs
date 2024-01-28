@@ -1,9 +1,6 @@
-﻿using Application.Common.Repositories;
-using Application.Core.Store.Queries.GetAllUserStore;
-using ErrorOr;
-using MediatR;
+﻿using Domain.Repository_Interfaces;
 
-namespace Application.Core.Store.Queries.GetAllUserStores;
+namespace Application.Core.Stores.Queries.GetUserOwnedStoreNames;
 
 public class GetUserOwnedStoreNamesQueryHandler(IStoreRepository storeRepository) : IRequestHandler<GetUserOwnedStoreNamesQuery, ErrorOr<List<KeyValuePair<long, string>>>>
 {
