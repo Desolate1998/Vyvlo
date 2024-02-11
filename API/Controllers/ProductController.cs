@@ -13,12 +13,14 @@ namespace API.Controllers;
 public class ProductController(ISender mediator, IHttpContextAccessor httpContextAccessor, ILogger<ProductController> logger):ControllerBase
 {
     [HttpPost("create"), Authorize]
-    public async Task<IActionResult> CreateProduct(CreateNewProductRequest request)
+    public async Task<IActionResult> CreateProduct([FromForm]IFormFile test)
     {
+
+        CreateNewProductRequest request = new();
         logger.LogInformation($"CreateProduct request received at [{DateTimeProvider.ApplicationDate}]");
         var userId = httpContextAccessor?.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier) ?? 
                      throw new UnauthorizedAccessException();
-        
+    
         CreateProductCommand createProductCommand = new CreateProductCommand(new CreateProductCommandRequestDTO(
             request.ProductName,
             request.ProductDescription,

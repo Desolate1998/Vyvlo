@@ -27,6 +27,7 @@ import { useToaster } from '../../../Infrastructure/Contexts/ToasterContext';
 import { CreateProductFormData } from '../../../Infrastructure/Types/CreateProductFormData';
 import { useStore } from '../../../Infrastructure/Contexts/StoreContext';
 import { productCategoryApi } from '../../../Infrastructure/API/Requests/ProductCategory/productCategoryApi';
+import { productApi } from '../../../Infrastructure/API/Requests/Product/productApi';
 
 interface IPorps {
   isOpen: boolean;
@@ -78,9 +79,7 @@ export const CreateProduct: React.FC<IPorps> = ({ isOpen, onClose }) => {
 
   const loadImages = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      const files = Array.from(e.target.files);
-      const validImages = files.filter(file => file.type.startsWith('image/'));
-      setImages(prevImages => [...prevImages, ...validImages]);
+      setImages(prevImages => [...prevImages, ...e.target.files!]);
     }
   };
 
@@ -98,27 +97,34 @@ export const CreateProduct: React.FC<IPorps> = ({ isOpen, onClose }) => {
       setIsLoading(true);
       setSubmitMessage('Product submitted successfully!');
       const formDataToSend = new FormData();
+      // formDataToSend.append('productName', productName);
+      // formDataToSend.append('productDescription', productDescription);
+      // formDataToSend.append('metaTags', metaTags.join(','));
+      // formDataToSend.append('price', price.toString());
+      // formDataToSend.append('enableStockTracking', enableStockTracking.toString());
+      // formDataToSend.append('stock', stock.toString());
+      // formDataToSend.append('storeId', currentStoreId!.toString());
+      // formDataToSend.append('categories', categories.map(c => c.id.toString()).join(','));
+  
+      // images.forEach((image, index) => {
+      //   formDataToSend.append(`images[${index}]`, image);
+      // });
+  
+      // console.log(formDataToSend); // Check if FormData object is properly formed
 
-      formDataToSend.append('productName', productName);
-      formDataToSend.append('productDescription', productDescription);
-      formDataToSend.append('metaTags', metaTags.toString());
-      formDataToSend.append('price', price.toString());
-      formDataToSend.append('enableStockTracking', enableStockTracking.toString());
-      formDataToSend.append('stock', stock.toString());
-      formDataToSend.append('storeId', currentStoreId!.toString());
+      //@ts-ignore
+      formDataToSend.append('test',images[0])
 
-      images.forEach((image, index) => {
-        formDataToSend.append(`images[${index}]`, image);
-      });
-
+      await productApi.create(formDataToSend);
+  
       notify('Product submitted successfully!', 'success');
-
     } catch (error) {
-      notify("Internal Server Error", 'error');
+      notify('Internal Server Error', 'error');
     } finally {
       setIsLoading(false);
     }
   };
+  
 
   const removeImage = (id: number) => {
     setImages(images.filter((_, index) => index !== id));
