@@ -8,6 +8,5 @@ public interface IProductRepository
     public Task<Product> UpdateProductAsync(Product product);
     public Task<Product> CreateProductAsync(Product product);
     public Task DeleteProductAsync(Product product);
-    
     public Task<bool> CheckIfProductExistsAsync(string productName, long storeId);
 }

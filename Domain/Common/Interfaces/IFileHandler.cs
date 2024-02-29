@@ -4,8 +4,7 @@ namespace Domain.Common.Interfaces
 {
     public interface IFileHandler
     {
-        Task UploadFileAsync(IFormFile file,  string folderName);
-        string BuildPath(string folderName, string fileName);
+        Task UploadFileAsync(IFormFile file, long storeId, long productId);
+        Task UploadMultpleFileAsync(IEnumerable<IFormFile> files, long storeId, long productId);
     }
-    
 }

@@ -1,4 +1,4 @@
-import { StoreStatus } from "./storeStatus";
+import { StoreStatus } from "./StoreStatus";
 
 export type Store = {
     storeID: number;

@@ -1,3 +1,3 @@
-export type registerResponse = {
+export type RegisterResponse = {
     
 }

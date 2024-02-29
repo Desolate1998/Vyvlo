@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240128130301_productImages")]
-    partial class productImages
+    [Migration("20240215090404_initial.2")]
+    partial class initial2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -108,9 +108,6 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.HasIndex("ProductId")
-                        .IsUnique();
-
                     b.ToTable("ProductCategoryLinks", (string)null);
                 });
 
@@ -141,20 +138,18 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Database.ProductMetaTag", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("ProductMetaTagId");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("Description");
-
-                    b.Property<long>("StoreId")
                         .HasColumnType("bigint")
-                        .HasColumnName("StoreId");
+                        .HasColumnName("Id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("ProductId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("StoreId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Tag")
                         .HasColumnType("nvarchar(max)")
@@ -162,6 +157,8 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_ProductMetaTag_Id");
+
+                    b.HasIndex("ProductId");
 
                     b.HasIndex("StoreId");
 
@@ -288,36 +285,6 @@ namespace Infrastructure.Migrations
                     b.ToTable("Users", (string)null);
                 });
 
-            modelBuilder.Entity("ProductProductCategory", b =>
-                {
-                    b.Property<long>("ProductCategoryId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("ProductsId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("ProductCategoryId", "ProductsId");
-
-                    b.HasIndex("ProductsId");
-
-                    b.ToTable("ProductProductCategory");
-                });
-
-            modelBuilder.Entity("ProductProductMetaTag", b =>
-                {
-                    b.Property<int>("ProductMetaTagsId")
-                        .HasColumnType("int");
-
-                    b.Property<long>("ProductsId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("ProductMetaTagsId", "ProductsId");
-
-                    b.HasIndex("ProductsId");
-
-                    b.ToTable("ProductProductMetaTag");
-                });
-
             modelBuilder.Entity("Domain.Database.Product", b =>
                 {
                     b.HasOne("Domain.Database.Store", "Store")
@@ -346,13 +313,13 @@ namespace Infrastructure.Migrations
                     b.HasOne("Domain.Database.ProductCategory", "Category")
                         .WithMany("ProductCategoryLinks")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.Database.Product", "Product")
-                        .WithOne("ProductCategoryLink")
-                        .HasForeignKey("Domain.Database.ProductCategoryLink", "ProductId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .WithMany("ProductCategoryLinks")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Category");
@@ -374,14 +341,18 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Database.ProductMetaTag", b =>
                 {
-                    b.HasOne("Domain.Database.Store", "Store")
+                    b.HasOne("Domain.Database.Product", "Product")
                         .WithMany("ProductMetaTags")
-                        .HasForeignKey("StoreId")
+                        .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired()
-                        .HasConstraintName("fk_Store_ProductMetaTag");
+                        .HasConstraintName("fk_Product_ProductMetaTag");
 
-                    b.Navigation("Store");
+                    b.HasOne("Domain.Database.Store", null)
+                        .WithMany("ProductMetaTags")
+                        .HasForeignKey("StoreId");
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Domain.Database.Store", b =>
@@ -403,41 +374,13 @@ namespace Infrastructure.Migrations
                     b.Navigation("StoreStatus");
                 });
 
-            modelBuilder.Entity("ProductProductCategory", b =>
-                {
-                    b.HasOne("Domain.Database.ProductCategory", null)
-                        .WithMany()
-                        .HasForeignKey("ProductCategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Database.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ProductProductMetaTag", b =>
-                {
-                    b.HasOne("Domain.Database.ProductMetaTag", null)
-                        .WithMany()
-                        .HasForeignKey("ProductMetaTagsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Domain.Database.Product", null)
-                        .WithMany()
-                        .HasForeignKey("ProductsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Domain.Database.Product", b =>
                 {
-                    b.Navigation("ProductCategoryLink");
+                    b.Navigation("ProductCategoryLinks");
 
                     b.Navigation("ProductImages");
+
+                    b.Navigation("ProductMetaTags");
                 });
 
             modelBuilder.Entity("Domain.Database.ProductCategory", b =>

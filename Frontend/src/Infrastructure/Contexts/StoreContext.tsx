@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
-import { KeyValuePair } from "../Types/keyValuePair";
+import { KeyValuePair } from "../Types/KeyValuePair";
 import { storeApi } from "../API/Requests/Store/storeApi";
 interface StoreContextProps {
     currentStoreId: number | null;

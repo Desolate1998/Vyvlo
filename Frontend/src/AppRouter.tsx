@@ -29,7 +29,7 @@ export const AppRouter = () => {
         return (
             <Router>
                 <Routes>
-                    <Route path="/" Component={AuthenticationView} />
+                    <Route path="*" Component={AuthenticationView} />
                 </Routes>
             </Router>
         );
@@ -37,7 +37,7 @@ export const AppRouter = () => {
         return (
             <Router>
                 <Routes>
-                    <Route path="/" Component={FirstStoreCreation} />
+                    <Route path="*" Component={FirstStoreCreation} />
                 </Routes>
             </Router>)
     } else {

@@ -157,14 +157,7 @@ public class DataContext(DbContextOptions options) : DbContext(options)
                   .HasForeignKey(p => p.StoreId)
                   .HasConstraintName("fk_Store_Product")
                   .OnDelete(DeleteBehavior.NoAction);
-
-            entity.HasMany(p => p.ProductCategoryLinks)
-                .WithOne(pc => pc.Product)
-                .HasForeignKey(pc => pc.ProductId);
-
-            entity.HasMany(p => p.ProductMetaTags)
-                  .WithMany(p => p.Products);
-
+         
         });
 
         modelBuilder.Entity<ProductMetaTag>(entity =>
@@ -173,21 +166,19 @@ public class DataContext(DbContextOptions options) : DbContext(options)
 
             entity.HasKey(p => p.Id)
                   .HasName("pk_ProductMetaTag_Id");
-
+                
             entity.Property(p => p.Id)
-                  .HasColumnName("ProductMetaTagId");
-
-            entity.Property(p => p.StoreId)
-                  .HasColumnName("StoreId");
-
-            entity.HasOne(p => p.Store)
-                  .WithMany(p => p.ProductMetaTags)
-                  .HasForeignKey(p => p.StoreId)
-                  .HasConstraintName("fk_Store_ProductMetaTag")
-                  .OnDelete(DeleteBehavior.NoAction);
+                  .HasColumnName("Id");
 
             entity.Property(p => p.Tag)
                   .HasColumnName("Tag");
+      
+            entity.HasOne(p => p.Product).
+                    WithMany(p => p.ProductMetaTags)
+                    .HasForeignKey(p => p.ProductId)
+                    .HasConstraintName("fk_Product_ProductMetaTag")
+                    .OnDelete(DeleteBehavior.NoAction);
+
         });
 
         modelBuilder.Entity<ProductCategory>(entity =>
@@ -205,11 +196,6 @@ public class DataContext(DbContextOptions options) : DbContext(options)
 
             entity.Property(p => p.Description)
                   .HasColumnName("Description");
-
-            entity.HasMany(pc => pc.ProductCategoryLinks)
-                .WithOne(link => link.Category)
-                .HasForeignKey(link => link.CategoryId);
-
         });
 
         modelBuilder.Entity<ProductCategoryLink>(entity =>
@@ -226,13 +212,6 @@ public class DataContext(DbContextOptions options) : DbContext(options)
             entity.Property(p => p.CategoryId)
                   .HasColumnName("CategoryId");
 
-            entity.HasOne(pc => pc.Product)
-                .WithMany(p => p.ProductCategoryLinks)
-                .HasForeignKey(pc => pc.ProductId);
-
-            entity.HasOne(pc => pc.Category)
-                .WithMany(c => c.ProductCategoryLinks)
-                .HasForeignKey(pc => pc.CategoryId);
         });
 
         modelBuilder.Entity<ProductImage>(entity =>
@@ -250,12 +229,6 @@ public class DataContext(DbContextOptions options) : DbContext(options)
 
             entity.Property(p => p.ImageUrl)
                   .HasColumnName("ImageUrl");
-
-            entity.HasOne(p => p.Product)
-                  .WithMany(p => p.ProductImages)
-                  .HasForeignKey(p => p.ProductId)
-                  .HasConstraintName("fk_Product_ProductImage")
-                  .OnDelete(DeleteBehavior.NoAction);
         });
     }
 }

@@ -62,6 +62,7 @@ public static class DependencyInjection
         services.AddScoped<IProductCategoriesRepository, ProductCategoriesRepository>();
         services.AddScoped<IFileHandler, FileHandler>();
         services.AddScoped<IProductRepository, ProductRepository>();
+        services.AddScoped<IMetaTagRepository, MetaTagRepository>();
 
         return services;
     }

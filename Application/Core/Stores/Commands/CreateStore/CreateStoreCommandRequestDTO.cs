@@ -1,7 +1,5 @@
-﻿namespace Application.Core.Stores.Commands.CreateStore;
+﻿using Microsoft.AspNetCore.Http;
 
-public class CreateStoreCommandRequestDTO
-{
-    public string Name { get; set; }
-    public string Description { get; set; }
-}
+namespace Application.Core.Stores.Commands.CreateStore;
+
+public record CreateStoreCommandRequestDTO(string Name, string Description, string Currency, string? Location, IFormFile? StoreImage);

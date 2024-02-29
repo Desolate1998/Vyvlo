@@ -1,1 +1,0 @@
-CREATE KEYSPACE Critex_Vyvlo_Master WITH replication = {'class': 'SimpleStrategy', 'replication_factor': 3};

@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using API.Contracts.Product;
 using Application.Core.Products.Commands.CreateProduct;
+using Application.Core.Products.Queries.GetAllProducts;
 using Common.DateTimeProvider;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -12,25 +13,34 @@ namespace API.Controllers;
 [Route("api/[controller]")]
 public class ProductController(ISender mediator, IHttpContextAccessor httpContextAccessor, ILogger<ProductController> logger):ControllerBase
 {
-    [HttpPost("create"), Authorize]
-    public async Task<IActionResult> CreateProduct([FromForm]IFormFile test)
+    [HttpPost("Create"), Authorize]
+    public async Task<IActionResult> CreateProduct([FromForm]CreateNewProductRequest request, ICollection<IFormFile> images)
     {
-
-        CreateNewProductRequest request = new();
         logger.LogInformation($"CreateProduct request received at [{DateTimeProvider.ApplicationDate}]");
         var userId = httpContextAccessor?.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier) ?? 
                      throw new UnauthorizedAccessException();
     
-        CreateProductCommand createProductCommand = new CreateProductCommand(new CreateProductCommandRequestDTO(
+        CreateProductCommand createProductCommand = new(new CreateProductCommandRequestDTO(
             request.ProductName,
             request.ProductDescription,
-            request.Categories,
+            request.GetCategories(),
             request.Stock,
-            request.MetaTags,
-            request.Price,
-            request.Images,
+            request.GetMetaTags(),
+            decimal.Parse(request.Price, System.Globalization.CultureInfo.InvariantCulture),
+            images,
             request.StoreId),long.Parse(userId)); 
         
         return Ok(await mediator.Send(createProductCommand));
+    }
+
+    [HttpGet("GetAll"), Authorize]
+    public async Task<IActionResult> GetAllProducts([FromQuery] long storeId)
+    {
+    
+        logger.LogInformation($"GetAllProducts request received at [{DateTimeProvider.ApplicationDate}]");
+        var userId = httpContextAccessor?.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier) ??
+             throw new UnauthorizedAccessException();
+        GetAllProductsQuery getAllProductsQuery = new(storeId,long.Parse(userId));
+        return Ok(await mediator.Send(getAllProductsQuery));
     }
 }

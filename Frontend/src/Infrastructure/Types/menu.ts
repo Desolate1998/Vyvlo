@@ -1,4 +1,4 @@
-import { SubMenu } from "./subMenu";
+import { SubMenu } from "./SubMenu";
 
 export type Menu =  {
     name: string;

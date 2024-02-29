@@ -1,4 +1,4 @@
-export type loginResponse ={
+export type LoginResponse ={
     email: string;
     firstName: string;
     lastName: string;

@@ -6,25 +6,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class initial : Migration
+    public partial class initial2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "ProductMetaTags",
-                columns: table => new
-                {
-                    ProductMetaTagId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Tag = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_ProductMetaTag_Id", x => x.ProductMetaTagId);
-                });
-
             migrationBuilder.CreateTable(
                 name: "StoreStatuses",
                 columns: table => new
@@ -131,51 +117,71 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductProductCategory",
+                name: "ProductCategoryLinks",
                 columns: table => new
                 {
-                    ProductCategoryId = table.Column<long>(type: "bigint", nullable: false),
-                    ProductsId = table.Column<long>(type: "bigint", nullable: false)
+                    ProductId = table.Column<long>(type: "bigint", nullable: false),
+                    CategoryId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductProductCategory", x => new { x.ProductCategoryId, x.ProductsId });
+                    table.PrimaryKey("pk_ProductCategoryLink_Id", x => new { x.ProductId, x.CategoryId });
                     table.ForeignKey(
-                        name: "FK_ProductProductCategory_ProductCategories_ProductCategoryId",
-                        column: x => x.ProductCategoryId,
+                        name: "FK_ProductCategoryLinks_ProductCategories_CategoryId",
+                        column: x => x.CategoryId,
                         principalTable: "ProductCategories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ProductProductCategory_Products_ProductsId",
-                        column: x => x.ProductsId,
+                        name: "FK_ProductCategoryLinks_Products_ProductId",
+                        column: x => x.ProductId,
                         principalTable: "Products",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductProductMetaTag",
+                name: "ProductImages",
                 columns: table => new
                 {
-                    ProductMetaTagsId = table.Column<int>(type: "int", nullable: false),
-                    ProductsId = table.Column<long>(type: "bigint", nullable: false)
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProductId = table.Column<long>(type: "bigint", nullable: false),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductProductMetaTag", x => new { x.ProductMetaTagsId, x.ProductsId });
+                    table.PrimaryKey("pk_ProductImage_Id", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ProductProductMetaTag_ProductMetaTags_ProductMetaTagsId",
-                        column: x => x.ProductMetaTagsId,
-                        principalTable: "ProductMetaTags",
-                        principalColumn: "ProductMetaTagId",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ProductProductMetaTag_Products_ProductsId",
-                        column: x => x.ProductsId,
+                        name: "fk_Product_ProductImage",
+                        column: x => x.ProductId,
                         principalTable: "Products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProductMetaTags",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Tag = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ProductId = table.Column<long>(type: "bigint", nullable: false),
+                    StoreId = table.Column<long>(type: "bigint", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_ProductMetaTag_Id", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProductMetaTags_Stores_StoreId",
+                        column: x => x.StoreId,
+                        principalTable: "Stores",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "fk_Product_ProductMetaTag",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -184,14 +190,24 @@ namespace Infrastructure.Migrations
                 column: "StoreId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductProductCategory_ProductsId",
-                table: "ProductProductCategory",
-                column: "ProductsId");
+                name: "IX_ProductCategoryLinks_CategoryId",
+                table: "ProductCategoryLinks",
+                column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductProductMetaTag_ProductsId",
-                table: "ProductProductMetaTag",
-                column: "ProductsId");
+                name: "IX_ProductImages_ProductId",
+                table: "ProductImages",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductMetaTags_ProductId",
+                table: "ProductMetaTags",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductMetaTags_StoreId",
+                table: "ProductMetaTags",
+                column: "StoreId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_StoreId",
@@ -213,16 +229,16 @@ namespace Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "ProductProductCategory");
+                name: "ProductCategoryLinks");
 
             migrationBuilder.DropTable(
-                name: "ProductProductMetaTag");
-
-            migrationBuilder.DropTable(
-                name: "ProductCategories");
+                name: "ProductImages");
 
             migrationBuilder.DropTable(
                 name: "ProductMetaTags");
+
+            migrationBuilder.DropTable(
+                name: "ProductCategories");
 
             migrationBuilder.DropTable(
                 name: "Products");

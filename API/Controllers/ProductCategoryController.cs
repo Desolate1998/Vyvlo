@@ -60,8 +60,8 @@ public class ProductCategoryController(ISender mediator, IHttpContextAccessor ht
         logger.LogInformation($"Create Product Category request received at [{DateTimeProvider.ApplicationDate}]");
         var userId = httpContextAccessor?.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier)?? 
                      throw new UnauthorizedAccessException();
-        CreateNewProductCategoryCommand query = new(new CreateNewProductCategoryCommandDTO(request.Description,
-                                                                                           request.Name,request.StoreId
+        CreateNewProductCategoryCommand query = new(new CreateNewProductCategoryCommandDTO(request.Name,
+                                                                                           request.Description,request.StoreId
                                                                                            ), long.Parse(userId));
         return Ok(await mediator.Send(query));
     }

@@ -1,0 +1,56 @@
+.store-creation-card {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .welcome-text {
+    margin-bottom: 10px;
+  }
+  
+  .start-text {
+    margin-bottom: 20px;
+  }
+  
+  .input-field {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+  
+  .dropdown {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+  
+  .file-upload-label {
+    display: inline-block;
+    background-color: #115ea3;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .file-upload-text {
+    cursor: pointer;
+  }
+  
+  .image-preview {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .submit-button {
+    margin-top: 20px;
+    width: 100%;
+  }
+  
+  .store-creation-body{
+    height: 100vh;
+    background: #ecedee;
+    overflow-y: scroll;
+  }

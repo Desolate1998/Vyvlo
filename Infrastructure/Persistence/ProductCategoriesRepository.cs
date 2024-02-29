@@ -37,7 +37,6 @@ internal class ProductCategoriesRepository(DataContext context) : IProductCatego
                           TotalProducts = groupedData.Count(x=>x.product.Name !=null),
                           TotalStock = groupedData.Sum(x => x.product.Stock)
                       }).ToListAsync();
-
     }
 
     async Task IProductCategoriesRepository.DeleteCategoryAsync(ProductCategory productCategory)
@@ -62,5 +61,10 @@ internal class ProductCategoriesRepository(DataContext context) : IProductCatego
     async Task<List<ProductCategory>> IProductCategoriesRepository.GetProductCategoriesAsync(long storeId)
     {
         return await context.ProductCategories.Where(x => x.StoreId == storeId).ToListAsync();
+    }
+
+    async Task IProductCategoriesRepository.LinkProductCategory(ICollection<ProductCategoryLink> links)
+    {
+        await context.ProductCategoryLinks.AddRangeAsync(links);
     }
 }

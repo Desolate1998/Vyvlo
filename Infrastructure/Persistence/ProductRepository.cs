@@ -27,7 +27,8 @@ internal class ProductRepository(DataContext context) : IProductRepository
 
     async Task<List<Product>> IProductRepository.GetAllProductsAsync(long storeId)
     {
-        return await context.Products.Where(x => x.StoreId == storeId).ToListAsync();
+        IQueryable<Product> query = context.Products;
+        return await query.Where(x => x.StoreId == storeId).Include(x=>x.ProductCategoryLinks).Include(x=>x.ProductMetaTags).ToListAsync();
     }
 
     async Task<Product?> IProductRepository.GetProductAsync(long productId)
@@ -35,7 +36,7 @@ internal class ProductRepository(DataContext context) : IProductRepository
         return await context.Products.FirstOrDefaultAsync(x => x.Id == productId);
     }
 
-    async Task<List<Product>> IProductRepository.GetProductsByCategoryAsync(long categoryId)
+     Task<List<Product>> IProductRepository.GetProductsByCategoryAsync(long categoryId)
     {
         throw new NotImplementedException();
     }

@@ -8,7 +8,7 @@ import {
 } from '@fluentui/react-components';
 import { FormikErrors, useFormik } from 'formik';
 import { Registerform } from './Registerform';
-import { loginRequest } from '../../Infrastructure/Types/loginRequest';
+import { LoginRequest } from '../../Infrastructure/Types/LoginRequest';
 import { useState } from 'react';
 import { authenticationApi } from '../../Infrastructure/API/Requests/Authentication/authenticationApi';
 import { useAuth } from '../../Infrastructure/Contexts/AuthContext';
@@ -20,7 +20,7 @@ export const AuthenticationView = () => {
 
     const { mainToast, notify } = useToaster();
 
-    const formik = useFormik<loginRequest>({
+    const formik = useFormik<LoginRequest>({
         initialValues: {
             email: '',
             password: '',
@@ -43,8 +43,8 @@ export const AuthenticationView = () => {
                 setLoading(false)
             }
         },
-        validate: (values: loginRequest) => {
-            let errors: FormikErrors<loginRequest> = {};
+        validate: (values: LoginRequest) => {
+            let errors: FormikErrors<LoginRequest> = {};
             if (!values.email) {
                 errors.email = 'Email is required';
             } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {

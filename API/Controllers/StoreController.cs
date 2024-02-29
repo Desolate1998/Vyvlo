@@ -19,17 +19,13 @@ public class StoreController(IMediator mediator, IHttpContextAccessor httpContex
 {
     [HttpPost("create"), Authorize]
     [ProducesResponseType(typeof(ErrorOr<Store>), 200)]
-    public async Task<IActionResult> CreateStore(CreateStoreRequest store)
+    public async Task<IActionResult> CreateStore([FromForm] CreateStoreRequest store)
     {
         logger.LogInformation($"CreateStore request received at [{DateTimeProvider.ApplicationDate}]");
         var userId = httpContextAccessor?.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier) ?? 
                      throw new UnauthorizedAccessException();
         
-        var command = new CreateStoreCommand(new CreateStoreCommandRequestDTO
-        {
-            Name = store.Name,
-            Description = store.Description,
-        }, long.Parse(userId));
+        var command = new CreateStoreCommand(new CreateStoreCommandRequestDTO(store.Name,store.Description,store.Currency,store.Location,store.StoreImage), long.Parse(userId));
 
         return Ok(await mediator.Send(command));
     }

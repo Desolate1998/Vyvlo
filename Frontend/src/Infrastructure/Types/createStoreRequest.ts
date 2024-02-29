@@ -1,4 +1,4 @@
-export type createStoreRequest = {
+export type CreateStoreRequest = {
     name:string;
     description:string;
 }

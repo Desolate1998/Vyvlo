@@ -11,4 +11,6 @@ public interface IProductCategoriesRepository
     public Task<ProductCategory> UpdateCategoryAsync(ProductCategory productCategory);
     public Task DeleteCategoryAsync(ProductCategory productCategory);
     public Task<ProductCategory?> GetCategoryAsync(long productCategoryId);
+    public Task LinkProductCategory(ICollection<ProductCategoryLink> links);
+
 }

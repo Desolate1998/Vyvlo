@@ -6,6 +6,5 @@ export type  CreateProductFormData = {
     price: string |number;
     enableStockTracking: boolean;
     stock: string |number;
-    images: File[];
     storeId:number;
   }

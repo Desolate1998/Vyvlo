@@ -9,7 +9,7 @@ import {
 import { Link } from "react-router-dom";
 import { useMenu } from "../../Infrastructure/Contexts/MenuContext";
 import { useTheme } from "../../Infrastructure/Contexts/ThemeContext";
-import { Menu as MenuType } from "../../Infrastructure/Types/menu";
+import { Menu as MenuType } from "../../Infrastructure/Types/Menu";
 
 interface IProps {
   options: MenuType;

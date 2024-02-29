@@ -10,7 +10,7 @@ public class CreateStoreCommandHandler(IStoreRepository storeRepository) : IRequ
         {
             return Error.Conflict("storeName", "Store already exists");
         }
-        var store  = Domain.Database.Store.CreateStore(request.UserId, request.Data.Name, request.Data.Description);
+        var store  = Domain.Database.Store.CreateStore(request.UserId, request.Data.Name, request.Data.Description, request.Data.Currency, request.Data.Location);
         return await storeRepository.CreateStoreAsync(store);
     }
 }

@@ -12,7 +12,8 @@ public sealed class Store
                   string? storeAddress,
                   string? storePhoneNumber,
                   string? storeEmail,
-                  string storeDescription)
+                  string storeDescription,
+                  string currency)
     {
         OwnerId = storeOwnerId;
         Name = storeName;
@@ -22,6 +23,7 @@ public sealed class Store
         Description = storeDescription;
         CreatedAt = DateTimeProvider.ApplicationDate;
         StoreStatusCode = Enums.StoreStatus.PendingActivation.GetCode();
+        Currency = currency;
     }
     public Store() { }
 
@@ -33,19 +35,20 @@ public sealed class Store
     public string? PhoneNumber { get; private set; }
     public string? Email { get; private set; }
     public string Description { get; private set; }
+    public string Currency { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public User Owner { get; set; }
     public StoreStatus StoreStatus { get; set; }
     public ICollection<Product> Products { get; set; } 
-
     public IEnumerable<ProductMetaTag> ProductMetaTags { get; set; }
     public static Store CreateStore(long storeOwnerId,
                                     string storeName,
                                     string storeDescription,
+                                    string currency,
                                     string? storeAddress = null,
                                     string? storePhoneNumber = null,
-                                    string? storeEmail =null)
+                                    string? storeEmail = null)
     {
-        return new Store(storeOwnerId, storeName, storeAddress, storePhoneNumber, storeEmail, storeDescription);
+        return new Store(storeOwnerId, storeName, storeAddress, storePhoneNumber, storeEmail, storeDescription,currency);
     }
 }

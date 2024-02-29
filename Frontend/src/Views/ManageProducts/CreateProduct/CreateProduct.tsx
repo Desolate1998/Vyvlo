@@ -3,7 +3,6 @@ import {
   Button,
   Input,
   Textarea,
-  MessageBar,
   Spinner,
   Field,
   Dropdown,
@@ -24,7 +23,6 @@ import {
 import { Dismiss24Regular } from '@fluentui/react-icons';
 import ImagePreview from '../../../Components/ImagePreviewer/ImagePreviewer';
 import { useToaster } from '../../../Infrastructure/Contexts/ToasterContext';
-import { CreateProductFormData } from '../../../Infrastructure/Types/CreateProductFormData';
 import { useStore } from '../../../Infrastructure/Contexts/StoreContext';
 import { productCategoryApi } from '../../../Infrastructure/API/Requests/ProductCategory/productCategoryApi';
 import { productApi } from '../../../Infrastructure/API/Requests/Product/productApi';
@@ -32,9 +30,10 @@ import { productApi } from '../../../Infrastructure/API/Requests/Product/product
 interface IPorps {
   isOpen: boolean;
   onClose: () => void;
+  addProduct: (item: Product) => void;  
 }
 
-export const CreateProduct: React.FC<IPorps> = ({ isOpen, onClose }) => {
+export const CreateProduct: React.FC<IPorps> = ({ isOpen, onClose, addProduct }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [images, setImages] = useState<File[]>([]);
   const [submitMessage, setSubmitMessage] = useState<string | null>(null);
@@ -46,6 +45,7 @@ export const CreateProduct: React.FC<IPorps> = ({ isOpen, onClose }) => {
   const [stock, setStock] = useState<number | string>('');
   const [metaTag, setmetaTag] = useState<string>('')
   const [categories, setCatgories] = useState<ProductCategory[]>([])
+  const [selectedCategory, setSelectedCatgories] = useState<ProductCategory[]>([])
   const { currentStoreId } = useStore()
   const { notify, mainToast } = useToaster()
 
@@ -88,8 +88,16 @@ export const CreateProduct: React.FC<IPorps> = ({ isOpen, onClose }) => {
   };
 
   const handleClose = () => {
-    onClose();
+    
     setImages([]);
+    setProductName('');
+    setProductDescription('');
+    setMetaTags([]);
+    setPrice('');
+    setEnableStockTracking(false);
+    setStock('');
+    setSubmitMessage(null);
+    onClose();
   };
 
   const handleSubmit = async () => {
@@ -97,27 +105,28 @@ export const CreateProduct: React.FC<IPorps> = ({ isOpen, onClose }) => {
       setIsLoading(true);
       setSubmitMessage('Product submitted successfully!');
       const formDataToSend = new FormData();
-      // formDataToSend.append('productName', productName);
-      // formDataToSend.append('productDescription', productDescription);
-      // formDataToSend.append('metaTags', metaTags.join(','));
-      // formDataToSend.append('price', price.toString());
-      // formDataToSend.append('enableStockTracking', enableStockTracking.toString());
-      // formDataToSend.append('stock', stock.toString());
-      // formDataToSend.append('storeId', currentStoreId!.toString());
-      // formDataToSend.append('categories', categories.map(c => c.id.toString()).join(','));
+ 
+      formDataToSend.append('productName', productName);
+      formDataToSend.append('productDescription', productDescription);
+      formDataToSend.append('metaTags', metaTags.join('&A/'));
+      formDataToSend.append('price', price.toString());
+      formDataToSend.append('enableStockTracking', enableStockTracking.toString());
+      formDataToSend.append('stock', stock.toString());
+      formDataToSend.append('storeId', currentStoreId!.toString());
+      formDataToSend.append('categories', selectedCategory.map(c => c.id.toString()).join('&A/'));
+      images.forEach((image) => {
+        formDataToSend.append(`images`, image);
+      });
   
-      // images.forEach((image, index) => {
-      //   formDataToSend.append(`images[${index}]`, image);
-      // });
-  
-      // console.log(formDataToSend); // Check if FormData object is properly formed
-
-      //@ts-ignore
-      formDataToSend.append('test',images[0])
-
-      await productApi.create(formDataToSend);
-  
-      notify('Product submitted successfully!', 'success');
+      console.log(formDataToSend.getAll('images'));
+      var response = await productApi.create(formDataToSend);
+      if (response.isError) {
+        notify(response.firstError.description, 'error');
+      } else {
+        notify('Product submitted successfully!', 'success');
+        addProduct(response.value!)
+        handleClose();
+      } 
     } catch (error) {
       notify('Internal Server Error', 'error');
     } finally {
@@ -125,6 +134,9 @@ export const CreateProduct: React.FC<IPorps> = ({ isOpen, onClose }) => {
     }
   };
   
+  const onCategorySelect = (data:string[]) => {
+    setSelectedCatgories(categories.filter(c => data.includes(c.name)))
+  }
 
   const removeImage = (id: number) => {
     setImages(images.filter((_, index) => index !== id));
@@ -224,10 +236,11 @@ export const CreateProduct: React.FC<IPorps> = ({ isOpen, onClose }) => {
         <Dropdown
           multiselect={true}
           placeholder="Select Categories"
-
+      
+            onOptionSelect={(_,d)=>onCategorySelect(d.selectedOptions)}
         >
           {categories.map((option) => (
-            <Option key={option.id}>
+            <Option key={option.id} >
               {option.name}
             </Option>
           ))}

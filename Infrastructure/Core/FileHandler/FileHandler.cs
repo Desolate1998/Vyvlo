@@ -1,19 +1,36 @@
 ﻿using Domain.Common.Interfaces;
 using Domain.Common.Settings;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
+using System.IO;
 
 namespace Infrastructure.Core.FileHandler;
 
-public class FileHandler : IFileHandler
+public class FileHandler(IOptions<FileDirectorySettings> fileSettings) :IFileHandler
 {
-    async Task IFileHandler.UploadFileAsync(IFormFile file,string path)
+    
+    public async Task UploadFileAsync(IFormFile file, long storeId, long productId)
     {
-        await using var fileStream = new FileStream(path, FileMode.Create);
+        var path = BuildPath(file.FileName, storeId, productId);
+        using Stream fileStream = new FileStream(path, FileMode.Create);
         await file.CopyToAsync(fileStream);
     }
     
-    string IFileHandler.BuildPath(string folderName, string fileName)
+    string BuildPath(string fileName, long storeId, long productId)
     {
-        return Path.Combine(folderName, fileName);
+        string path = Path.Combine(fileSettings.Value.Root,storeId.ToString(),productId.ToString());
+        if (!Directory.Exists(path))
+        {
+            Directory.CreateDirectory(path);
+        }
+        return Path.Combine(path, fileName);
+    }
+
+    public async Task UploadMultpleFileAsync(IEnumerable<IFormFile> files, long storeId, long productId)
+    {
+        foreach (var file in files)
+        {
+            await UploadFileAsync(file, storeId, productId);
+        }
     }
 }

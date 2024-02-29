@@ -1,10 +1,10 @@
 import { ErrorOr } from "../../../Types/ErrorOr";
-import { createStoreRequest } from "../../../Types/createStoreRequest";
-import { KeyValuePair } from "../../../Types/keyValuePair";
-import { Store } from "../../../Types/store";
+import { CreateStoreRequest } from "../../../Types/CreateStoreRequest";
+import { KeyValuePair } from "../../../Types/KeyValuePair";
+import { Store } from "../../../Types/Store";
 import { requests } from "../../agnet";
 
 export const storeApi = {
-    create: (data: createStoreRequest) => requests.post<ErrorOr<Store>>(`store/create`, data),
+    create: (data: FormData) => requests.post<ErrorOr<Store>>(`store/create`, data),
     getUserOwnedStoreNames: () => requests.get<ErrorOr<KeyValuePair<number, string>[]>>(`store/getUserOwnedStoreNames`)
 }
